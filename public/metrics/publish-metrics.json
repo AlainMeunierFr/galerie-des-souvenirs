@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-02-09T22:16:38.808Z",
-  "status": "success",
+  "timestamp": "2026-02-09T22:31:15.542Z",
+  "status": "in_progress",
   "failedAtStep": null,
   "us": {
     "files": 1,
     "sprints": 1,
     "caTotal": 2,
-    "enCours": "US-1.1"
+    "enCours": "Aucune US en cours."
   },
   "tu": {
     "files": 1,
@@ -14,7 +14,7 @@
     "passed": 1,
     "failed": 0,
     "skipped": 0,
-    "durationMs": 2292,
+    "durationMs": 1249,
     "total": 1
   },
   "ti": {
@@ -23,7 +23,7 @@
     "passed": 1,
     "failed": 0,
     "skipped": 0,
-    "durationMs": 619,
+    "durationMs": 429,
     "total": 1
   },
   "bdd": {
@@ -34,22 +34,24 @@
     "passed": 5,
     "failed": 0,
     "skipped": 0,
-    "durationMs": 13402,
+    "durationMs": 4477,
     "total": 5
   },
   "e2e": {
     "scenarios": 5,
     "stepsTotal": 12,
-    "passed": 5,
+    "passed": 0,
     "failed": 0,
     "skipped": 0,
     "stepsPassed": null,
     "stepsFailed": null,
-    "durationMs": 12573,
-    "total": 5
+    "durationMs": 77,
+    "total": 0,
+    "files": 0,
+    "tests": 0
   },
   "pipeline": {
-    "totalDurationMs": 68302
+    "totalDurationMs": null
   },
   "inconsistencies": []
 }

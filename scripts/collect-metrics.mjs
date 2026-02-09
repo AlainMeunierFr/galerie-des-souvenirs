@@ -22,6 +22,7 @@ export function collectStaticMetrics() {
   const tu = collectTU(testsDir);
   const ti = collectTI(testsDir);
   const bdd = collectBDD(testsDir);
+  const e2e = collectE2E(testsDir);
 
   return {
     timestamp: new Date().toISOString(),
@@ -31,15 +32,7 @@ export function collectStaticMetrics() {
     tu: { ...tu, passed: null, failed: null, skipped: null, total: null, durationMs: null },
     ti: { ...ti, passed: null, failed: null, skipped: null, total: null, durationMs: null },
     bdd: { ...bdd, passed: null, failed: null, skipped: null, total: null, durationMs: null },
-    e2e: {
-      scenarios: bdd.scenarios,
-      stepsTotal: bdd.stepsTotal,
-      passed: null,
-      failed: null,
-      skipped: null,
-      total: null,
-      durationMs: null,
-    },
+    e2e: { ...e2e, passed: null, failed: null, skipped: null, total: null, durationMs: null },
     pipeline: { totalDurationMs: null },
     inconsistencies: [],
   };
@@ -152,6 +145,30 @@ function collectBDD(testsDir) {
   return { featureFiles, scenarios, stepsTotal, stepDefinitionFiles };
 }
 
+function collectE2E(testsDir) {
+  const e2eDir = join(testsDir, 'end-to-end');
+  let files = 0;
+  let tests = 0;
+
+  if (!existsSync(e2eDir)) return { files: 0, tests: 0 };
+
+  function walk(dir) {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = join(dir, e.name);
+      if (e.isDirectory()) walk(p);
+      else if (/\.spec\.(ts|tsx|js|jsx)$/.test(e.name)) {
+        files++;
+        const content = readFileSync(p, 'utf-8');
+        const itMatches = content.match(/\bit\s*\(/g);
+        const testMatches = content.match(/\btest\s*\(/g);
+        tests += (itMatches?.length || 0) + (testMatches?.length || 0);
+      }
+    }
+  }
+  walk(e2eDir);
+  return { files, tests };
+}
+
 /**
  * Lit le fichier JSON Jest et extrait les métriques (API outil).
  */
@@ -255,11 +272,11 @@ export function computeInconsistencies(metrics) {
       api: metrics.bdd.total,
     });
   }
-  if (metrics.e2e?.scenarios != null && metrics.e2e?.total != null && metrics.e2e.scenarios !== metrics.e2e.total) {
+  if (metrics.e2e?.tests != null && metrics.e2e?.total != null && metrics.e2e.tests !== metrics.e2e.total) {
     list.push({
       type: 'e2e',
-      message: 'E2E : nombre de scénarios (scan) ≠ nombre exécutés (API)',
-      scan: metrics.e2e.scenarios,
+      message: 'E2E : nombre de tests (scan) ≠ nombre exécutés (API)',
+      scan: metrics.e2e.tests,
       api: metrics.e2e.total,
     });
   }

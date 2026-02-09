@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Script de publication : ESLint → TU → TI → BDD → E2E → Typecheck + Build → Push GitHub
+ * Script de publication : ESLint → TU → TI → BDD → E2E → Typecheck + Build → Commit → Push GitHub
  * À chaque erreur : log + prompt de correction → arrêt
  * Métriques : collecte statique au début, mise à jour progressive après chaque étape.
  */
@@ -102,6 +102,20 @@ L'étape **Build Next.js** a échoué. Consulte le log ci-dessous.
 **Action** : Corriger les erreurs de build. Puis relancer \`npm run publish\`.`,
   },
   {
+    id: 'commit',
+    name: 'Commit',
+    cmd: process.platform === 'win32' ? 'cmd' : 'sh',
+    args:
+      process.platform === 'win32'
+        ? ['/c', 'git add -A && (git diff --cached --quiet || git commit -m "chore: publication pipeline validé")']
+        : ['-c', 'git add -A && (git diff --cached --quiet || git commit -m "chore: publication pipeline validé")'],
+    prompt: `## Erreur Commit
+
+L'étape **Commit** a échoué. Consulte le log ci-dessous.
+
+**Action** : Résoudre le problème (conflits, fichiers verrouillés, etc.). Puis relancer \`npm run publish\`.`,
+  },
+  {
     id: 'push',
     name: 'Push GitHub',
     cmd: 'git',
@@ -135,9 +149,14 @@ function runStep(step) {
 
     child.on('close', (code) => {
       const output = `=== stdout ===\n${stdout}\n=== stderr ===\n${stderr}`;
-      if (code !== 0) {
+      // E2E : "No tests found" (dossier end-to-end vide) = succès, métriques à 0
+      const e2eEmptyOk = step?.id === 'e2e' && /No tests found/i.test(stdout + stderr);
+      if (code !== 0 && !e2eEmptyOk) {
         reject({ code, output, stdout, stderr });
       } else {
+        if (e2eEmptyOk) {
+          updateMetrics({ e2e: { passed: 0, failed: 0, skipped: 0, total: 0, durationMs: 0 } });
+        }
         resolve({ stdout, stderr });
       }
     });
@@ -198,11 +217,11 @@ async function main() {
         const fallback = Object.values(api).every((v) => v == null) ? parseJestOutput(out) : api;
         updateMetrics({ ti: fallback });
       } else if (step.id === 'bdd') {
-        const api = parsePlaywrightJson(join(TEST_RESULTS_DIR, 'playwright.json'));
+        const api = parsePlaywrightJson(join(TEST_RESULTS_DIR, 'playwright-bdd.json'));
         const fallback = Object.values(api).every((v) => v == null) ? parsePlaywrightOutput(out) : api;
-        updateMetrics({ bdd: fallback, e2e: { ...fallback } });
+        updateMetrics({ bdd: fallback });
       } else if (step.id === 'e2e') {
-        const api = parsePlaywrightJson(join(TEST_RESULTS_DIR, 'playwright.json'));
+        const api = parsePlaywrightJson(join(TEST_RESULTS_DIR, 'playwright-e2e.json'));
         const fallback = Object.values(api).every((v) => v == null) ? parsePlaywrightOutput(out) : api;
         updateMetrics({ e2e: fallback });
       }
@@ -218,12 +237,14 @@ async function main() {
         const api = parseJestJson(join(TEST_RESULTS_DIR, 'jest-integration.json'));
         const data = Object.values(api).some((v) => v != null) ? api : parseJestOutput(out);
         if (data.passed !== null || data.failed !== null) updateMetrics({ ti: data });
-      } else if (step.id === 'bdd' || step.id === 'e2e') {
-        const api = parsePlaywrightJson(join(TEST_RESULTS_DIR, 'playwright.json'));
+      } else if (step.id === 'bdd') {
+        const api = parsePlaywrightJson(join(TEST_RESULTS_DIR, 'playwright-bdd.json'));
         const data = Object.values(api).some((v) => v != null) ? api : parsePlaywrightOutput(out);
-        if (data.passed !== null || data.failed !== null) {
-          updateMetrics(step.id === 'bdd' ? { bdd: data, e2e: data } : { e2e: data });
-        }
+        if (data.passed !== null || data.failed !== null) updateMetrics({ bdd: data });
+      } else if (step.id === 'e2e') {
+        const api = parsePlaywrightJson(join(TEST_RESULTS_DIR, 'playwright-e2e.json'));
+        const data = Object.values(api).some((v) => v != null) ? api : parsePlaywrightOutput(out);
+        if (data.passed !== null || data.failed !== null) updateMetrics({ e2e: data });
       }
       updateMetricsFromInconsistencies();
       updateMetrics({ status: 'failed', failedAtStep: step.id });

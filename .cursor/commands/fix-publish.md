@@ -1,11 +1,11 @@
-## Erreur ESLint
+## Erreur E2E
 
-L'étape **ESLint** a échoué. Consulte le log ci-dessous pour identifier les problèmes.
+L'étape **E2E (Playwright)** a échoué. Consulte le log ci-dessous.
 
-**Action** : Corriger les erreurs de lint signalées. Puis relancer `npm run publish`.
+**Action** : Corriger les tests E2E ou le comportement de l'application. Puis relancer `npm run publish`.
 
 ---
 
-**Log** : `logs/publish-eslint-errors.txt`
+**Log** : `logs/publish-e2e-errors.txt`
 
 Pour analyser : utilise la commande `/analyse-erreurs` ou lis le fichier log.

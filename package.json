@@ -10,7 +10,7 @@
     "test:unit": "jest --config jest.config.mjs",
     "test:integration": "jest --config jest.integration.config.mjs",
     "test:bdd": "npx bddgen && npx playwright test",
-    "test:e2e": "npx playwright test",
+    "test:e2e": "npx playwright test --config=playwright.e2e.config.ts",
     "publish": "node scripts/publish.mjs"
   },
   "dependencies": {

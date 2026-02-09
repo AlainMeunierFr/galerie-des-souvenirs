@@ -1,0 +1,17 @@
+=== E2E (Playwright) - ÉCHEC ===
+
+=== stdout ===
+
+> galerie-des-souvenirs@0.1.0 test:e2e
+> npx playwright test --config=playwright.e2e.config.ts
+
+Error: No tests found
+
+[1A[2K
+To open last HTML report run:
+[36m[39m
+[36m  npx playwright show-report playwright-report-e2e[39m
+[36m[39m
+
+=== stderr ===
+
