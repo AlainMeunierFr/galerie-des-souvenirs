@@ -1,0 +1,19 @@
+=== Tests unitaires (Jest) - ÉCHEC ===
+
+=== stdout ===
+
+> galerie-des-souvenirs@0.1.0 test:unit
+> jest --config jest.config.ts
+
+
+=== stderr ===
+Error: Jest: Failed to parse the TypeScript config file C:\Dev\galerie-des-souvenirs\jest.config.ts
+  Error: Jest: 'ts-node' is required for the TypeScript configuration files. Make sure it is installed
+Error: Cannot find package 'ts-node' imported from C:\Dev\galerie-des-souvenirs\node_modules\@jest\core\node_modules\jest-config\build\readConfigFileAndSetRootDir.js
+    at readConfigFileAndSetRootDir (C:\Dev\galerie-des-souvenirs\node_modules\@jest\core\node_modules\jest-config\build\readConfigFileAndSetRootDir.js:116:13)
+    at async readInitialOptions (C:\Dev\galerie-des-souvenirs\node_modules\@jest\core\node_modules\jest-config\build\index.js:392:15)
+    at async readConfig (C:\Dev\galerie-des-souvenirs\node_modules\@jest\core\node_modules\jest-config\build\index.js:147:48)
+    at async readConfigs (C:\Dev\galerie-des-souvenirs\node_modules\@jest\core\node_modules\jest-config\build\index.js:424:26)
+    at async runCLI (C:\Dev\galerie-des-souvenirs\node_modules\@jest\core\build\cli\index.js:151:59)
+    at async Object.run (C:\Dev\galerie-des-souvenirs\node_modules\jest-cli\build\run.js:130:37)
+

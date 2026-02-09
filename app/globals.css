@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  /* Type .bienvenue (US-1.1) */
+  --bienvenue-font-size: clamp(1.5rem, 5vw, 2.25rem);
+  --bienvenue-font-weight: 400;
+  --bienvenue-letter-spacing: 0.02em;
+  --bienvenue-padding: 1.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Type .bienvenue — message d'accueil (US-1.1) */
+.bienvenue h1 {
+  font-size: var(--bienvenue-font-size);
+  font-weight: var(--bienvenue-font-weight);
+  letter-spacing: var(--bienvenue-letter-spacing);
+  padding: var(--bienvenue-padding);
+  text-align: center;
+}

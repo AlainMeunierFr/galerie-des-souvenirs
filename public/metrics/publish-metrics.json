@@ -1,0 +1,55 @@
+{
+  "timestamp": "2026-02-09T22:16:38.808Z",
+  "status": "success",
+  "failedAtStep": null,
+  "us": {
+    "files": 1,
+    "sprints": 1,
+    "caTotal": 2,
+    "enCours": "US-1.1"
+  },
+  "tu": {
+    "files": 1,
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 2292,
+    "total": 1
+  },
+  "ti": {
+    "files": 1,
+    "tests": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 619,
+    "total": 1
+  },
+  "bdd": {
+    "featureFiles": 2,
+    "scenarios": 5,
+    "stepsTotal": 12,
+    "stepDefinitionFiles": 1,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 13402,
+    "total": 5
+  },
+  "e2e": {
+    "scenarios": 5,
+    "stepsTotal": 12,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "stepsPassed": null,
+    "stepsFailed": null,
+    "durationMs": 12573,
+    "total": 5
+  },
+  "pipeline": {
+    "totalDurationMs": 68302
+  },
+  "inconsistencies": []
+}

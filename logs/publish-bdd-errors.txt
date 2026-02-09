@@ -1,0 +1,18 @@
+=== BDD (playwright-bdd) - ÉCHEC ===
+
+=== stdout ===
+
+> galerie-des-souvenirs@0.1.0 test:bdd
+> npx bddgen && npx playwright test
+
+
+=== stderr ===
+Missing step definitions: 1
+
+Given('je suis sur la page d\'accueil', async ({}) => {
+  // Step: Étant donné que je suis sur la page d'accueil
+  // From: tests\bdd\accueil.feature:5:5
+});
+
+Use snippets above to create missing steps.
+
