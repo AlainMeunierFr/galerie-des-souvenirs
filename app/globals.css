@@ -233,6 +233,7 @@ body {
 .galerie-muuri .muuri-item-content {
   width: calc(100% - var(--galerie-gap));
   margin: calc(var(--galerie-gap) / 2);
+  margin-block: calc(var(--galerie-gap) / 4);
 }
 
 .galerie-muuri .muuri-item-content .galerie-carte {
@@ -404,8 +405,11 @@ body {
   color: var(--background);
 }
 
-/* Bouton Supprimer sur les cartes (US-5.3) — action destructive */
+/* Bouton Supprimer sur les cartes (US-5.3) — action destructive, hauteur liée au texte (pas carré) */
 .galerie-carte-boutons[aria-label="Actions admin"] button {
+  min-height: auto;
+  height: auto;
+  aspect-ratio: auto;
   border-color: var(--destructive-border);
   color: var(--destructive-border);
   background: var(--destructive-bg);

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-02-10T19:43:33.197Z",
+  "timestamp": "2026-02-10T19:53:48.104Z",
   "status": "in_progress",
   "failedAtStep": null,
   "us": {
@@ -14,7 +14,7 @@
     "passed": 43,
     "failed": 0,
     "skipped": 0,
-    "durationMs": 4130,
+    "durationMs": 3093,
     "total": 43
   },
   "ti": {
@@ -23,7 +23,7 @@
     "passed": 5,
     "failed": 0,
     "skipped": 0,
-    "durationMs": 587,
+    "durationMs": 603,
     "total": 5
   },
   "bdd": {
@@ -34,7 +34,7 @@
     "passed": 10,
     "failed": 0,
     "skipped": 17,
-    "durationMs": 38633,
+    "durationMs": 42628,
     "total": 27
   },
   "e2e": {
@@ -45,7 +45,7 @@
     "skipped": 0,
     "stepsPassed": null,
     "stepsFailed": null,
-    "durationMs": 888,
+    "durationMs": 1048,
     "total": 0,
     "files": 0,
     "tests": 0
