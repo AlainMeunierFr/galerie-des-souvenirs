@@ -5,6 +5,7 @@ const createJestConfig = nextJest({ dir: '.' });
 /** @type {import('jest').Config} */
 const config = {
   testEnvironment: 'node',
+  maxWorkers: 1, // BDD en mémoire partagée
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },

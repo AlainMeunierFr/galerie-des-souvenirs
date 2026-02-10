@@ -1,4 +1,5 @@
 import { SignedIn, SignedOut } from '@clerk/nextjs';
+import GalerieCartes from './components/GalerieCartes';
 
 type HomePageContentProps = {
   souvenirs: string[];
@@ -26,15 +27,7 @@ export default function HomePageContent({ souvenirs }: HomePageContentProps) {
             data-testid="galerie"
             aria-label="Galerie de photos"
           >
-            {souvenirs.map((filename) => (
-              <figure key={filename}>
-                <img
-                  src={`/api/souvenirs/${filename}`}
-                  alt=""
-                  loading="lazy"
-                />
-              </figure>
-            ))}
+            <GalerieCartes souvenirs={souvenirs} />
           </section>
         </main>
       </SignedIn>

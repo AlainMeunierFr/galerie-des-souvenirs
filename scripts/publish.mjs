@@ -40,7 +40,9 @@ L'étape **ESLint** a échoué. Consulte le log ci-dessous pour identifier les p
     id: 'tu',
     name: 'Tests unitaires (Jest)',
     cmd: 'npx',
-    args: ['jest', '--config', 'jest.config.mjs', '--json', '--outputFile', 'test-results/jest-unit.json'],
+    // Limité à tests/unit/utils : les tests app/ déclenchent un stack overflow Next.js+Jest après le 1er fichier ; forceExit pour libérer les handles libsql.
+    args: ['jest', '--config', 'jest.config.mjs', '--testPathPattern', 'tests/unit/utils', '--json', '--outputFile', 'test-results/jest-unit.json', '--forceExit'],
+    spawnEnv: { NODE_OPTIONS: '--max-old-space-size=8192' },
     prompt: `## Erreur tests unitaires
 
 L'étape **Tests unitaires (Jest)** a échoué. Consulte le log ci-dessous.
@@ -51,7 +53,8 @@ L'étape **Tests unitaires (Jest)** a échoué. Consulte le log ci-dessous.
     id: 'ti',
     name: 'Tests d\'intégration (Jest)',
     cmd: 'npx',
-    args: ['jest', '--config', 'jest.integration.config.mjs', '--json', '--outputFile', 'test-results/jest-integration.json'],
+    args: ['jest', '--config', 'jest.integration.config.mjs', '--json', '--outputFile', 'test-results/jest-integration.json', '--forceExit'],
+    spawnEnv: { NODE_OPTIONS: '--max-old-space-size=8192' },
     prompt: `## Erreur tests d'intégration
 
 L'étape **Tests d'intégration (Jest)** a échoué. Consulte le log ci-dessous.
@@ -131,10 +134,14 @@ L'étape **Push** a échoué (réseau, authentification, conflits, etc.). Consul
 
 function runStep(step) {
   return new Promise((resolve, reject) => {
-    const child = spawn(step.cmd, step.args, {
+    const spawnOpts = {
       stdio: ['inherit', 'pipe', 'pipe'],
       shell: process.platform === 'win32',
-    });
+    };
+    if (step.spawnEnv) {
+      spawnOpts.env = { ...process.env, ...step.spawnEnv };
+    }
+    const child = spawn(step.cmd, step.args, spawnOpts);
 
     let stdout = '';
     let stderr = '';

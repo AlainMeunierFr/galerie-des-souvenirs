@@ -5,12 +5,17 @@ export async function syncUser(
   clerk_id: string,
   email: string
 ): Promise<void> {
-  const existing = await repo.findByClerkId(clerk_id);
-  if (existing) {
-    if (existing.email !== email) {
+  const byClerk = await repo.findByClerkId(clerk_id);
+  if (byClerk) {
+    if (byClerk.email !== email) {
       await repo.updateEmail(clerk_id, email);
     }
-  } else {
-    await repo.create(clerk_id, email);
+    return;
   }
+  const byEmail = await repo.findByEmail(email);
+  if (byEmail) {
+    await repo.updateClerkId(byEmail.clerk_id, clerk_id);
+    return;
+  }
+  await repo.create(clerk_id, email);
 }

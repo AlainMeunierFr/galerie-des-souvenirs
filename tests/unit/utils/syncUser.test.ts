@@ -6,14 +6,15 @@ describe('syncUser', () => {
     const repo: UserRepository = {
       ensureTable: jest.fn(),
       findByClerkId: () => Promise.resolve(null),
+      findByEmail: () => Promise.resolve(null),
       create: jest.fn().mockResolvedValue({
         id: 1,
         clerk_id: 'clerk_1',
         email: 'new@test.fr',
         created_at: '2024-01-01',
       }),
-      findByEmail: () => Promise.resolve(null),
       updateEmail: jest.fn(),
+      updateClerkId: jest.fn(),
     };
     await syncUser(repo, 'clerk_1', 'new@test.fr');
     expect(repo.create).toHaveBeenCalledWith('clerk_1', 'new@test.fr');
@@ -30,12 +31,33 @@ describe('syncUser', () => {
           email: 'old@test.fr',
           created_at: '2024-01-01',
         }),
-      create: jest.fn(),
       findByEmail: () => Promise.resolve(null),
+      create: jest.fn(),
       updateEmail: jest.fn(),
+      updateClerkId: jest.fn(),
     };
     await syncUser(repo, 'clerk_1', 'new@test.fr');
     expect(repo.updateEmail).toHaveBeenCalledWith('clerk_1', 'new@test.fr');
+    expect(repo.create).not.toHaveBeenCalled();
+  });
+
+  it('met à jour clerk_id si l\'email existe déjà avec un autre clerk_id', async () => {
+    const repo: UserRepository = {
+      ensureTable: jest.fn(),
+      findByClerkId: () => Promise.resolve(null),
+      findByEmail: () =>
+        Promise.resolve({
+          id: 1,
+          clerk_id: 'clerk_old',
+          email: 'same@test.fr',
+          created_at: '2024-01-01',
+        }),
+      create: jest.fn(),
+      updateEmail: jest.fn(),
+      updateClerkId: jest.fn(),
+    };
+    await syncUser(repo, 'clerk_new', 'same@test.fr');
+    expect(repo.updateClerkId).toHaveBeenCalledWith('clerk_old', 'clerk_new');
     expect(repo.create).not.toHaveBeenCalled();
   });
 
@@ -49,9 +71,10 @@ describe('syncUser', () => {
           email: 'same@test.fr',
           created_at: '2024-01-01',
         }),
-      create: jest.fn(),
       findByEmail: () => Promise.resolve(null),
+      create: jest.fn(),
       updateEmail: jest.fn(),
+      updateClerkId: jest.fn(),
     };
     await syncUser(repo, 'clerk_1', 'same@test.fr');
     expect(repo.updateEmail).not.toHaveBeenCalled();

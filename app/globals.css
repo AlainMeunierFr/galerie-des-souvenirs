@@ -76,12 +76,16 @@ body {
   }
 }
 
-.galerie figure {
-  aspect-ratio: 1;
+.galerie figure,
+.galerie .galerie-carte {
   margin: 0;
   border-radius: var(--galerie-figure-radius);
-  overflow: hidden;
   background: var(--galerie-figure-bg);
+}
+
+.galerie figure:not(.galerie-carte) {
+  aspect-ratio: 1;
+  overflow: hidden;
 }
 
 .galerie img {
@@ -89,4 +93,65 @@ body {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+/* Carte souvenir (US-5.1) : photo + boutons d'intérêt */
+.galerie-carte {
+  display: flex;
+  flex-direction: column;
+  border: none;
+  outline: none;
+}
+
+.galerie-carte img {
+  aspect-ratio: 1;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--galerie-figure-radius) var(--galerie-figure-radius) 0 0;
+}
+
+.galerie-carte-boutons {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: var(--galerie-figure-bg);
+  border-radius: 0 0 var(--galerie-figure-radius) var(--galerie-figure-radius);
+}
+
+.galerie-carte-boutons button {
+  flex: 1;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--foreground);
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.galerie-carte-boutons button:hover:not(:disabled) {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.galerie-carte-boutons button[aria-pressed="true"] {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.galerie-carte-boutons button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.galerie-carte-boutons--disabled {
+  justify-content: center;
+}
+
+.galerie-carte-boutons--disabled span {
+  font-size: 0.75rem;
+  color: var(--foreground);
+  opacity: 0.8;
 }

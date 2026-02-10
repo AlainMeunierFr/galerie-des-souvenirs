@@ -3,54 +3,24 @@
 === stdout ===
 
 === stderr ===
-PASS tests/unit/utils/syncUser.test.ts
-PASS tests/unit/utils/getSouvenirFilenames.test.ts
-PASS tests/unit/utils/FileSystemSouvenirRepository.test.ts
-PASS tests/unit/utils/getSouvenirBuffer.test.ts
-PASS tests/unit/utils/ensureUserTable.test.ts
-PASS tests/unit/utils/userTableSchema.test.ts
-FAIL tests/unit/utils/LibsqlUserRepository.test.ts
-  ● LibsqlUserRepository › crée un utilisateur et le retourne
+PASS tests/unit/utils/LibsqlUserRepository.test.ts
 
-    LibsqlError: SQLITE_BUSY: database is locked
+<--- Last few GCs --->
 
-    [0m [90m 11 |[39m
-     [90m 12 |[39m   beforeEach([36masync[39m () [33m=>[39m {
-    [31m[1m>[22m[39m[90m 13 |[39m     [36mawait[39m db[33m.[39mexecute([32m'DELETE FROM user'[39m)[33m;[39m
-     [90m    |[39m              [31m[1m^[22m[39m
-     [90m 14 |[39m   })[33m;[39m
-     [90m 15 |[39m
-     [90m 16 |[39m   it([32m'crée un utilisateur et le retourne'[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+[68068:0000024B4CC1F000]   101947 ms: Scavenge (interleaved) 4091.1 (4095.8) -> 4091.0 (4100.8) MB, pooled: 0 MB, 9.49 / 0.00 ms  (average mu = 0.220, current mu = 0.170) allocation failure; 
+[68068:0000024B4CC1F000]   104257 ms: Mark-Compact (reduce) 4092.0 (4100.8) -> 4091.9 (4095.6) MB, pooled: 0 MB, 1921.53 / 0.00 ms  (+ 80.5 ms in 17 steps since start of marking, biggest step 5.1 ms, walltime since start of marking 2034 ms) (average mu = 
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
 
-      at mapSqliteError (node_modules/@libsql/client/lib-cjs/sqlite3.js:458:16)
-      at executeStmt (node_modules/@libsql/client/lib-cjs/sqlite3.js:361:15)
-      at Sqlite3Client.execute (node_modules/@libsql/client/lib-cjs/sqlite3.js:104:16)
-      at Object.execute (tests/unit/utils/LibsqlUserRepository.test.ts:13:14)
-
-    Cause:
-    SqliteError: database is locked
-
-    [0m [90m 11 |[39m
-     [90m 12 |[39m   beforeEach([36masync[39m () [33m=>[39m {
-    [31m[1m>[22m[39m[90m 13 |[39m     [36mawait[39m db[33m.[39mexecute([32m'DELETE FROM user'[39m)[33m;[39m
-     [90m    |[39m              [31m[1m^[22m[39m
-     [90m 14 |[39m   })[33m;[39m
-     [90m 15 |[39m
-     [90m 16 |[39m   it([32m'crée un utilisateur et le retourne'[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
-
-      at convertError (node_modules/libsql/index.js:59:12)
-      at Statement.run (node_modules/libsql/index.js:335:13)
-      at executeStmt (node_modules/@libsql/client/lib-cjs/sqlite3.js:354:34)
-      at Sqlite3Client.execute (node_modules/@libsql/client/lib-cjs/sqlite3.js:104:16)
-      at Object.execute (tests/unit/utils/LibsqlUserRepository.test.ts:13:14)
-
-PASS tests/unit/app/page.connected.test.tsx
-PASS tests/unit/app/page.test.tsx
-
-Test Suites: 1 failed, 8 passed, 9 total
-Tests:       1 failed, 26 passed, 27 total
-Snapshots:   0 total
-Time:        4.508 s
-Ran all test suites.
-Test results written to: test-results\jest-unit.json
+ 1: 00007FF6F98CAE1F node::OnFatalError+1343
+ 2: 00007FF6FA5137B7 v8::Function::NewInstance+423
+ 3: 00007FF6FA313E77 v8::base::AddressSpaceReservation::AddressSpaceReservation+322071
+ 4: 00007FF6FA317B84 v8::base::AddressSpaceReservation::AddressSpaceReservation+337700
+ 5: 00007FF6FA326B1C v8::internal::StrongRootAllocatorBase::deallocate_impl+16604
+ 6: 00007FF6FA32635B v8::internal::StrongRootAllocatorBase::deallocate_impl+14619
+ 7: 00007FF6FB78EBED v8::base::UnsignedDivisionByConstant<unsigned __int64>+2791309
+ 8: 00007FF6FA311940 v8::base::AddressSpaceReservation::AddressSpaceReservation+312544
+ 9: 00007FF6FA395619 v8::Unlocker::~Unlocker+9273
+10: 00007FF6F9F0B398 v8::String::Utf8Value::~Utf8Value+142680
+11: 0000024B1FE7733A 
 

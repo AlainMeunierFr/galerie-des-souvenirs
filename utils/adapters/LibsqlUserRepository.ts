@@ -50,4 +50,11 @@ export class LibsqlUserRepository implements UserRepository {
       args: [email, clerk_id],
     });
   }
+
+  async updateClerkId(old_clerk_id: string, new_clerk_id: string): Promise<void> {
+    await this.db.execute({
+      sql: 'UPDATE user SET clerk_id = ? WHERE clerk_id = ?',
+      args: [new_clerk_id, old_clerk_id],
+    });
+  }
 }

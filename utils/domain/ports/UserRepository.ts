@@ -9,4 +9,5 @@ export interface UserRepository {
   findByEmail(email: string): Promise<User | null>;
   findByClerkId(clerk_id: string): Promise<User | null>;
   updateEmail(clerk_id: string, email: string): Promise<void>;
+  updateClerkId(old_clerk_id: string, new_clerk_id: string): Promise<void>;
 }

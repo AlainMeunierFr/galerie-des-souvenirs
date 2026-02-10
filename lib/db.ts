@@ -1,8 +1,9 @@
 import { createClient } from '@libsql/client';
 
 const url =
-  process.env.TURSO_DATABASE_URL ??
-  (process.env.JEST_WORKER_ID !== undefined ? 'file::memory:' : null);
+  process.env.JEST_WORKER_ID !== undefined
+    ? 'file::memory:'
+    : process.env.TURSO_DATABASE_URL ?? null;
 
 if (!url) {
   throw new Error(

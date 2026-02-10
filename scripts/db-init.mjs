@@ -46,12 +46,23 @@ CREATE TABLE IF NOT EXISTS souvenir (
 );
 `;
 
+const INTERET_TABLE_SQL = `
+CREATE TABLE IF NOT EXISTS interet (
+  user_id INTEGER NOT NULL REFERENCES user(id),
+  souvenir_nom TEXT NOT NULL,
+  interet TEXT CHECK (interet IS NULL OR interet IN ('oui', 'non')),
+  PRIMARY KEY (user_id, souvenir_nom)
+);
+`;
+
 async function main() {
   console.log('Initialisation du schéma...');
   await db.execute(USER_TABLE_SQL);
   console.log('Table user créée ou déjà existante.');
   await db.execute(SOUVENIR_TABLE_SQL);
   console.log('Table souvenir créée ou déjà existante.');
+  await db.execute(INTERET_TABLE_SQL);
+  console.log('Table interet créée ou déjà existante.');
 }
 
 main().catch((err) => {
