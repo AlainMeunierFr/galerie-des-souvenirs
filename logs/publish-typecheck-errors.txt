@@ -1,0 +1,21 @@
+=== Contrôle de typage (TypeScript) - ÉCHEC ===
+
+=== stdout ===
+.next/types/validator.ts(62,39): error TS2307: Cannot find module '../../app/api/photos/[filename]/route.js' or its corresponding type declarations.
+tests/unit/utils/getSouvenirBuffer.test.ts(7,11): error TS2741: Property 'listFilenames' is missing in type '{ getBuffer: () => Promise<Buffer<ArrayBuffer>>; }' but required in type 'SouvenirRepository'.
+tests/unit/utils/getSouvenirBuffer.test.ts(15,11): error TS2741: Property 'listFilenames' is missing in type '{ getBuffer: () => Promise<Buffer<ArrayBuffer>>; }' but required in type 'SouvenirRepository'.
+tests/unit/utils/getSouvenirBuffer.test.ts(24,11): error TS2741: Property 'listFilenames' is missing in type '{ getBuffer: () => Promise<Buffer<ArrayBuffer>>; }' but required in type 'SouvenirRepository'.
+tests/unit/utils/getSouvenirBuffer.test.ts(31,11): error TS2741: Property 'listFilenames' is missing in type '{ getBuffer: () => Promise<Buffer<ArrayBufferLike>>; }' but required in type 'SouvenirRepository'.
+tests/unit/utils/getSouvenirFilenames.test.ts(6,11): error TS2741: Property 'getBuffer' is missing in type '{ listFilenames: () => Promise<string[]>; }' but required in type 'SouvenirRepository'.
+tests/unit/utils/getSouvenirFilenames.test.ts(14,11): error TS2741: Property 'getBuffer' is missing in type '{ listFilenames: () => Promise<string[]>; }' but required in type 'SouvenirRepository'.
+utils/adapters/LibsqlUserRepository.ts(13,17): error TS2352: Conversion of type 'Row' to type '{ id: number; clerk_id: string; email: string; created_at: string; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Row' is missing the following properties from type '{ id: number; clerk_id: string; email: string; created_at: string; }': id, clerk_id, email, created_at
+utils/adapters/LibsqlUserRepository.ts(28,17): error TS2352: Conversion of type 'Row' to type '{ id: number; clerk_id: string; email: string; created_at: string; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Row' is missing the following properties from type '{ id: number; clerk_id: string; email: string; created_at: string; }': id, clerk_id, email, created_at
+utils/adapters/LibsqlUserRepository.ts(38,17): error TS2352: Conversion of type 'Row' to type '{ id: number; clerk_id: string; email: string; created_at: string; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Row' is missing the following properties from type '{ id: number; clerk_id: string; email: string; created_at: string; }': id, clerk_id, email, created_at
+utils/db/userTableSchema.ts(16,15): error TS2352: Conversion of type 'Row' to type '{ name: string; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Property 'name' is missing in type 'Row' but required in type '{ name: string; }'.
+
+=== stderr ===
+

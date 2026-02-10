@@ -1,5 +1,9 @@
+import { config } from 'dotenv';
+import { resolve } from 'path';
 import { defineConfig, devices } from '@playwright/test';
 import { defineBddConfig, cucumberReporter } from 'playwright-bdd';
+
+config({ path: resolve(process.cwd(), '.env.local') });
 
 /**
  * Config BDD (Gherkin) — utilisée par bddgen et test:bdd.

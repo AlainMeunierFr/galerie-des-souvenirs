@@ -5,14 +5,17 @@
 > galerie-des-souvenirs@0.1.0 test:bdd
 > npx bddgen && npx playwright test
 
+[dotenv@17.2.4] injecting env (2) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.4] injecting env (2) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+Error: Process from config.webServer was not able to start. Exit code: 1
+
+[1A[2K
+To open last HTML report run:
+[36m[39m
+[36m  npx playwright show-report[39m
+[36m[39m
 
 === stderr ===
-Missing step definitions: 1
-
-Given('je suis sur la page d\'accueil', async ({}) => {
-  // Step: Étant donné que je suis sur la page d'accueil
-  // From: tests\bdd\accueil.feature:5:5
-});
-
-Use snippets above to create missing steps.
+[1A[2K[2m[WebServer] [22m[31m[1m⨯[22m[39m Unable to acquire lock at [36mC:\Dev\galerie-des-souvenirs\.next\dev\lock[39m, is another instance of [36mnext dev[39m running?
 

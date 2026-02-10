@@ -5,6 +5,7 @@ const createJestConfig = nextJest({ dir: '.' });
 /** @type {import('jest').Config} */
 const config = {
   testEnvironment: 'jsdom',
+  maxWorkers: 1, // tests unitaires qui utilisent la BDD partagent une base en mémoire
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },

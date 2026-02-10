@@ -5,8 +5,9 @@
  * Métriques : collecte statique au début, mise à jour progressive après chaque étape.
  */
 
+import { config } from 'dotenv';
 import { spawn } from 'child_process';
-import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'fs';
+import { writeFileSync, mkdirSync, existsSync, readFileSync, unlinkSync } from 'fs';
 import { join } from 'path';
 import {
   collectStaticMetrics,
@@ -192,6 +193,9 @@ Pour analyser : utilise la commande \`/analyse-erreurs\` ou lis le fichier log.`
 }
 
 async function main() {
+  // Charger .env.local pour que le build (Clerk) et les tests aient les variables
+  config({ path: join(process.cwd(), '.env.local') });
+
   console.log('🚀 Script de publication\n');
 
   // Métriques statiques au début (disponibles même en cas d'échec)
@@ -201,6 +205,16 @@ async function main() {
   console.log('   📊 Métriques initiales collectées (public/metrics/publish-metrics.json)\n');
 
   for (const step of STEPS) {
+    // Avant BDD/E2E : supprimer le verrou next dev pour éviter "Unable to acquire lock"
+    if (step.id === 'bdd' || step.id === 'e2e') {
+      const lockPath = join(process.cwd(), '.next', 'dev', 'lock');
+      if (existsSync(lockPath)) {
+        try {
+          unlinkSync(lockPath);
+        } catch { /* ignorer */ }
+      }
+    }
+
     console.log(`\n▶ ${step.name}...`);
     try {
       const result = await runStep(step);

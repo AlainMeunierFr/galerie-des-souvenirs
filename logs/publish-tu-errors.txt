@@ -2,18 +2,55 @@
 
 === stdout ===
 
-> galerie-des-souvenirs@0.1.0 test:unit
-> jest --config jest.config.ts
-
-
 === stderr ===
-Error: Jest: Failed to parse the TypeScript config file C:\Dev\galerie-des-souvenirs\jest.config.ts
-  Error: Jest: 'ts-node' is required for the TypeScript configuration files. Make sure it is installed
-Error: Cannot find package 'ts-node' imported from C:\Dev\galerie-des-souvenirs\node_modules\@jest\core\node_modules\jest-config\build\readConfigFileAndSetRootDir.js
-    at readConfigFileAndSetRootDir (C:\Dev\galerie-des-souvenirs\node_modules\@jest\core\node_modules\jest-config\build\readConfigFileAndSetRootDir.js:116:13)
-    at async readInitialOptions (C:\Dev\galerie-des-souvenirs\node_modules\@jest\core\node_modules\jest-config\build\index.js:392:15)
-    at async readConfig (C:\Dev\galerie-des-souvenirs\node_modules\@jest\core\node_modules\jest-config\build\index.js:147:48)
-    at async readConfigs (C:\Dev\galerie-des-souvenirs\node_modules\@jest\core\node_modules\jest-config\build\index.js:424:26)
-    at async runCLI (C:\Dev\galerie-des-souvenirs\node_modules\@jest\core\build\cli\index.js:151:59)
-    at async Object.run (C:\Dev\galerie-des-souvenirs\node_modules\jest-cli\build\run.js:130:37)
+PASS tests/unit/utils/syncUser.test.ts
+PASS tests/unit/utils/getSouvenirFilenames.test.ts
+PASS tests/unit/utils/FileSystemSouvenirRepository.test.ts
+PASS tests/unit/utils/getSouvenirBuffer.test.ts
+PASS tests/unit/utils/ensureUserTable.test.ts
+PASS tests/unit/utils/userTableSchema.test.ts
+FAIL tests/unit/utils/LibsqlUserRepository.test.ts
+  ● LibsqlUserRepository › crée un utilisateur et le retourne
+
+    LibsqlError: SQLITE_BUSY: database is locked
+
+    [0m [90m 11 |[39m
+     [90m 12 |[39m   beforeEach([36masync[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 13 |[39m     [36mawait[39m db[33m.[39mexecute([32m'DELETE FROM user'[39m)[33m;[39m
+     [90m    |[39m              [31m[1m^[22m[39m
+     [90m 14 |[39m   })[33m;[39m
+     [90m 15 |[39m
+     [90m 16 |[39m   it([32m'crée un utilisateur et le retourne'[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at mapSqliteError (node_modules/@libsql/client/lib-cjs/sqlite3.js:458:16)
+      at executeStmt (node_modules/@libsql/client/lib-cjs/sqlite3.js:361:15)
+      at Sqlite3Client.execute (node_modules/@libsql/client/lib-cjs/sqlite3.js:104:16)
+      at Object.execute (tests/unit/utils/LibsqlUserRepository.test.ts:13:14)
+
+    Cause:
+    SqliteError: database is locked
+
+    [0m [90m 11 |[39m
+     [90m 12 |[39m   beforeEach([36masync[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 13 |[39m     [36mawait[39m db[33m.[39mexecute([32m'DELETE FROM user'[39m)[33m;[39m
+     [90m    |[39m              [31m[1m^[22m[39m
+     [90m 14 |[39m   })[33m;[39m
+     [90m 15 |[39m
+     [90m 16 |[39m   it([32m'crée un utilisateur et le retourne'[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at convertError (node_modules/libsql/index.js:59:12)
+      at Statement.run (node_modules/libsql/index.js:335:13)
+      at executeStmt (node_modules/@libsql/client/lib-cjs/sqlite3.js:354:34)
+      at Sqlite3Client.execute (node_modules/@libsql/client/lib-cjs/sqlite3.js:104:16)
+      at Object.execute (tests/unit/utils/LibsqlUserRepository.test.ts:13:14)
+
+PASS tests/unit/app/page.connected.test.tsx
+PASS tests/unit/app/page.test.tsx
+
+Test Suites: 1 failed, 8 passed, 9 total
+Tests:       1 failed, 26 passed, 27 total
+Snapshots:   0 total
+Time:        4.508 s
+Ran all test suites.
+Test results written to: test-results\jest-unit.json
 

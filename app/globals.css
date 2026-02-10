@@ -3,11 +3,20 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  /* Type .bienvenue (US-1.1) */
+  /* Type .bienvenue (US-1.1, US-1.2) */
   --bienvenue-font-size: clamp(1.5rem, 5vw, 2.25rem);
   --bienvenue-font-weight: 400;
   --bienvenue-letter-spacing: 0.02em;
   --bienvenue-padding: 1.5rem;
+  --bienvenue-h2-font-size: clamp(1rem, 3vw, 1.25rem);
+  --bienvenue-h2-margin-top: 1rem;
+  --bienvenue-p-font-size: clamp(1rem, 3vw, 1.25rem);
+  --bienvenue-p-margin-top: 1rem;
+  /* Type .galerie (US-2.1) */
+  --galerie-gap: 1rem;
+  --galerie-figure-radius: 0.5rem;
+  --galerie-figure-bg: #e5e5e5;
+  --galerie-breakpoint: 768px;
 }
 
 @theme inline {
@@ -21,6 +30,7 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --galerie-figure-bg: #262626;
   }
 }
 
@@ -30,11 +40,53 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Type .bienvenue — message d'accueil (US-1.1) */
+/* Type .bienvenue — message d'accueil (US-1.1, US-1.2) */
 .bienvenue h1 {
   font-size: var(--bienvenue-font-size);
   font-weight: var(--bienvenue-font-weight);
   letter-spacing: var(--bienvenue-letter-spacing);
   padding: var(--bienvenue-padding);
   text-align: center;
+}
+
+.bienvenue h2 {
+  font-size: var(--bienvenue-h2-font-size);
+  font-weight: var(--bienvenue-font-weight);
+  letter-spacing: var(--bienvenue-letter-spacing);
+  text-align: center;
+  margin-top: var(--bienvenue-h2-margin-top);
+}
+
+.bienvenue p {
+  font-size: var(--bienvenue-p-font-size);
+  text-align: center;
+  margin-top: var(--bienvenue-p-margin-top);
+}
+
+/* Type .galerie — galerie de photos (US-2.1) */
+.galerie {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--galerie-gap);
+}
+
+@media (min-width: 768px) {
+  .galerie {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.galerie figure {
+  aspect-ratio: 1;
+  margin: 0;
+  border-radius: var(--galerie-figure-radius);
+  overflow: hidden;
+  background: var(--galerie-figure-bg);
+}
+
+.galerie img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }

@@ -1,21 +1,21 @@
 {
-  "timestamp": "2026-02-09T22:31:15.542Z",
+  "timestamp": "2026-02-10T01:45:38.330Z",
   "status": "in_progress",
   "failedAtStep": null,
   "us": {
-    "files": 1,
+    "files": 4,
     "sprints": 1,
-    "caTotal": 2,
-    "enCours": "Aucune US en cours."
+    "caTotal": 10,
+    "enCours": "**Dernière revue (GO NEXT)** : US-2.1 — Afficher la galerie"
   },
   "tu": {
-    "files": 1,
-    "tests": 1,
-    "passed": 1,
+    "files": 9,
+    "tests": 28,
+    "passed": 27,
     "failed": 0,
     "skipped": 0,
-    "durationMs": 1249,
-    "total": 1
+    "durationMs": 5512,
+    "total": 27
   },
   "ti": {
     "files": 1,
@@ -23,19 +23,19 @@
     "passed": 1,
     "failed": 0,
     "skipped": 0,
-    "durationMs": 429,
+    "durationMs": 782,
     "total": 1
   },
   "bdd": {
-    "featureFiles": 2,
-    "scenarios": 5,
-    "stepsTotal": 12,
-    "stepDefinitionFiles": 1,
-    "passed": 5,
+    "featureFiles": 5,
+    "scenarios": 13,
+    "stepsTotal": 38,
+    "stepDefinitionFiles": 2,
+    "passed": 8,
     "failed": 0,
-    "skipped": 0,
-    "durationMs": 4477,
-    "total": 5
+    "skipped": 5,
+    "durationMs": 14056,
+    "total": 13
   },
   "e2e": {
     "scenarios": 5,
@@ -45,7 +45,7 @@
     "skipped": 0,
     "stepsPassed": null,
     "stepsFailed": null,
-    "durationMs": 77,
+    "durationMs": 191,
     "total": 0,
     "files": 0,
     "tests": 0
@@ -53,5 +53,12 @@
   "pipeline": {
     "totalDurationMs": null
   },
-  "inconsistencies": []
+  "inconsistencies": [
+    {
+      "type": "tu",
+      "message": "TU : nombre de tests déclarés (scan) ≠ nombre exécutés (API)",
+      "scan": 28,
+      "api": 27
+    }
+  ]
 }

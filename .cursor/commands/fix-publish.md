@@ -1,11 +1,11 @@
-## Erreur E2E
+## Erreur Build
 
-L'étape **E2E (Playwright)** a échoué. Consulte le log ci-dessous.
+L'étape **Build Next.js** a échoué. Consulte le log ci-dessous.
 
-**Action** : Corriger les tests E2E ou le comportement de l'application. Puis relancer `npm run publish`.
+**Action** : Corriger les erreurs de build. Puis relancer `npm run publish`.
 
 ---
 
-**Log** : `logs/publish-e2e-errors.txt`
+**Log** : `logs/publish-build-errors.txt`
 
 Pour analyser : utilise la commande `/analyse-erreurs` ou lis le fichier log.
