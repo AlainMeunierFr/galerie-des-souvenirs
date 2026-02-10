@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
+import { VercelBlobSouvenirRepository } from '@/utils/adapters/VercelBlobSouvenirRepository';
+import { getSouvenirBuffer } from '@/utils/use-cases/getSouvenirBuffer';
 
-const MINIATURE_DIR = join(process.cwd(), 'data', 'souvenirs', 'miniature');
+const repo = new VercelBlobSouvenirRepository();
 
 /**
- * GET /api/souvenirs/[filename] — Sert les miniatures (grille). Bundle léger pour Vercel.
- * Pas de DELETE ici pour éviter Clerk + libsql dans ce bundle (limite 300Mo).
+ * GET /api/souvenirs/[filename] — Sert les miniatures depuis Vercel Blob.
  */
 export async function GET(
   _request: NextRequest,
@@ -21,7 +20,7 @@ export async function GET(
   }
 
   try {
-    const buffer = await readFile(join(MINIATURE_DIR, filename));
+    const buffer = await getSouvenirBuffer(repo, filename);
     const contentType =
       filename.toLowerCase().endsWith('.webp') ? 'image/webp' : 'image/jpeg';
     return new NextResponse(new Uint8Array(buffer), {
@@ -30,7 +29,10 @@ export async function GET(
         'Cache-Control': 'public, max-age=86400',
       },
     });
-  } catch {
+  } catch (err) {
+    if (err instanceof Error && err.message === 'Invalid filename') {
+      return new NextResponse('Bad Request', { status: 400 });
+    }
     return new NextResponse('Not Found', { status: 404 });
   }
 }

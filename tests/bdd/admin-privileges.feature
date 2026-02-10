@@ -37,7 +37,8 @@ Fonctionnalité: Privilèges administrateur (US-5.3)
     Et une pop-up de confirmation s'affiche
     Et je confirme la suppression dans la pop-up
     Alors le souvenir est supprimé de la base de données
-    Et les fichiers du souvenir sont supprimés des dossiers Done, Webp et miniatures
+    Et les fichiers du souvenir du dossier Done sont déplacés vers data/input/trash
+    Et les fichiers du souvenir des dossiers Webp et miniatures sont supprimés
 
   Scénario: CA3 - Annulation ou fermeture de la pop-up n'effectue aucune suppression
     Étant donné je suis connecté en tant qu'administrateur
@@ -46,4 +47,4 @@ Fonctionnalité: Privilèges administrateur (US-5.3)
     Et une pop-up de confirmation s'affiche
     Et j'annule ou je ferme la pop-up sans confirmer
     Alors le souvenir n'est pas supprimé
-    Et les fichiers du souvenir restent présents dans les dossiers Done, Webp et miniatures
+    Et les fichiers du souvenir restent présents (Done, Webp et miniatures inchangés)

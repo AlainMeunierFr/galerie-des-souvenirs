@@ -31,11 +31,11 @@ export { getSouvenirFilenames } from './use-cases/getSouvenirFilenames';
 export { getSouvenirBuffer } from './use-cases/getSouvenirBuffer';
 export { syncUser } from './use-cases/syncUser';
 
-import { FileSystemSouvenirRepository } from './adapters/FileSystemSouvenirRepository';
+import { VercelBlobSouvenirRepository } from './adapters/VercelBlobSouvenirRepository';
 import { LibsqlInteretRepository } from './adapters/LibsqlInteretRepository';
 import { LibsqlUserRepository } from './adapters/LibsqlUserRepository';
 import { db } from '@/lib/db';
 
-export const defaultSouvenirRepository = new FileSystemSouvenirRepository();
+export const defaultSouvenirRepository = new VercelBlobSouvenirRepository();
 export const defaultUserRepository = new LibsqlUserRepository(db);
 export const defaultInteretRepository = new LibsqlInteretRepository(db);

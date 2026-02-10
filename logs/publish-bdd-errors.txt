@@ -5,62 +5,15 @@
 > galerie-des-souvenirs@0.1.0 test:bdd
 > npx bddgen && npx playwright test
 
-[dotenv@17.2.4] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.4] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
 
 === stderr ===
-Missing step definitions: 11
+Missing step definitions: 1
 
-Then('la page contient un filtre ou un contrôle intitulé {string} ou dont le libellé évoque l\'intérêt', async ({}, arg: string) => {
-  // Step: Alors la page contient un filtre ou un contrôle intitulé "Intérêt" ou dont le libellé évoque l'intérêt
-  // From: tests\bdd\filtre-interet-header.feature:9:5
+Then('les fichiers du souvenir du dossier Done sont déplacés vers data\\/input\\/trash', async ({}) => {
+  // Step: Et les fichiers du souvenir du dossier Done sont déplacés vers data/input/trash
+  // From: tests\bdd\admin-privileges.feature:40:5
 });
-
-Then('ce filtre propose les options {string}, {string} et {string}', async ({}, arg: string, arg1: string, arg2: string) => {
-  // Step: Et ce filtre propose les options "Intéressé", "Pas intéressé" et "Pas prononcé"
-  // From: tests\bdd\filtre-interet-header.feature:10:5
-});
-
-Then('les options du filtre Intérêt ont les mêmes libellés que les boutons d\'intérêt sur les cartes', async ({}) => {
-  // Step: Et les options du filtre Intérêt ont les mêmes libellés que les boutons d'intérêt sur les cartes
-  // From: tests\bdd\filtre-interet-header.feature:11:5
-});
-
-Then('le filtre Intérêt a toutes ses options cochées ou sélectionnées', async ({}) => {
-  // Step: Alors le filtre Intérêt a toutes ses options cochées ou sélectionnées
-  // From: tests\bdd\filtre-interet-header.feature:14:5
-});
-
-Then('la galerie affiche l\'ensemble des souvenirs \\(aucun filtrage appliqué)', async ({}) => {
-  // Step: Et la galerie affiche l'ensemble des souvenirs (aucun filtrage appliqué)
-  // From: tests\bdd\filtre-interet-header.feature:15:5
-});
-
-When('je décoche uniquement l\'option {string} dans le filtre Intérêt', async ({}, arg: string) => {
-  // Step: Quand je décoche uniquement l'option "Pas prononcé" dans le filtre Intérêt
-  // From: tests\bdd\filtre-interet-header.feature:18:5
-});
-
-Then('la galerie n\'affiche que les souvenirs dont l\'intérêt est {string} ou {string}', async ({}, arg: string, arg1: string) => {
-  // Step: Alors la galerie n'affiche que les souvenirs dont l'intérêt est "Intéressé" ou "Pas intéressé"
-  // From: tests\bdd\filtre-interet-header.feature:19:5
-});
-
-Then('les souvenirs dont l\'intérêt est {string} ne sont pas affichés', async ({}, arg: string) => {
-  // Step: Et les souvenirs dont l'intérêt est "Pas prononcé" ne sont pas affichés
-  // From: tests\bdd\filtre-interet-header.feature:20:5
-});
-
-When('je fais défiler le contenu de la page vers le bas', async ({}) => {
-  // Step: Quand je fais défiler le contenu de la page vers le bas
-  // From: tests\bdd\filtre-interet-header.feature:25:5
-});
-
-Then('le titre H1 reste visible dans la zone visible', async ({}) => {
-  // Step: Alors le titre H1 reste visible dans la zone visible
-  // From: tests\bdd\filtre-interet-header.feature:26:5
-});
-
-...and 1 more.
 
 Use snippets above to create missing steps.
 

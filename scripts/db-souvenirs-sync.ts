@@ -1,75 +1,61 @@
 #!/usr/bin/env node
 /**
- * Synchronise la table souvenir avec les dossiers :
- * - data/input/done (HEIC convertis, colonne done)
- * - data/souvenirs/webp (webp pleine taille, colonne webp)
- * - data/souvenirs/miniature (miniatures webp, colonne miniature)
+ * Synchronise la table souvenir avec Vercel Blob (miniatures).
+ * Chaque miniature dans Blob → enregistrement souvenir avec done=1, webp=1, miniature=1.
  *
  * Usage: npm run db:souvenirs-sync
- * Requiert TURSO_DATABASE_URL et TURSO_AUTH_TOKEN dans .env.local
- * Architecture hexagonale : utilise SouvenirInventoryRepository.
+ * Requiert BLOB_READ_WRITE_TOKEN, TURSO_DATABASE_URL, TURSO_AUTH_TOKEN dans .env.local
  */
 
 import { config } from 'dotenv';
-import { resolve, join } from 'path';
-import { readdir } from 'fs/promises';
+import { resolve } from 'path';
+import { list } from '@vercel/blob';
 import { LibsqlSouvenirInventoryRepository } from '@/utils/adapters/LibsqlSouvenirInventoryRepository';
 
 config({ path: resolve(process.cwd(), '.env.local') });
 config({ path: resolve(process.cwd(), '.env') });
 
-const DONE_DIR = join(process.cwd(), 'data', 'input', 'done');
-const WEBP_DIR = join(process.cwd(), 'data', 'souvenirs', 'webp');
-const MINIATURE_DIR = join(process.cwd(), 'data', 'souvenirs', 'miniature');
+const PREFIX = 'miniature/';
 
-function baseName(file: string): string {
-  return file.replace(/\.(heic|webp|jpe?g)$/i, '');
-}
-
-async function listBaseNames(
-  dir: string,
-  pattern = /\.(heic|webp|jpe?g)$/i
-): Promise<Set<string>> {
-  try {
-    const files = await readdir(dir);
-    return new Set(files.filter((f) => pattern.test(f)).map(baseName));
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === 'ENOENT') return new Set();
-    throw err;
-  }
+function baseName(pathname: string): string {
+  return pathname.replace(PREFIX, '').replace(/\.(webp|jpe?g)$/i, '');
 }
 
 async function main() {
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    console.error('BLOB_READ_WRITE_TOKEN est requis.');
+    process.exit(1);
+  }
   if (!process.env.TURSO_DATABASE_URL) {
-    console.error(
-      'TURSO_DATABASE_URL est requis. Définissez-le dans .env.local (voir docs/ENVIRONNEMENT.md).'
-    );
+    console.error('TURSO_DATABASE_URL est requis.');
     process.exit(1);
   }
 
   const { db } = await import('@/lib/db');
   const repo = new LibsqlSouvenirInventoryRepository(db);
 
-  console.log('Sync des souvenirs (Done, Webp, Miniature)...\n');
+  console.log('Sync des souvenirs depuis Vercel Blob...\n');
 
-  const [doneSet, webpSet, miniatureSet] = await Promise.all([
-    listBaseNames(DONE_DIR),
-    listBaseNames(WEBP_DIR),
-    listBaseNames(MINIATURE_DIR),
-  ]);
+  const allNames = new Set<string>();
+  let cursor: string | undefined;
 
-  const allNames = new Set([...doneSet, ...webpSet, ...miniatureSet]);
+  do {
+    const result = await list({ prefix: PREFIX, limit: 1000, cursor });
+    for (const blob of result.blobs) {
+      if (/\.(webp|jpe?g)$/i.test(blob.pathname)) {
+        allNames.add(baseName(blob.pathname));
+      }
+    }
+    cursor = result.cursor;
+  } while (cursor);
 
   if (allNames.size === 0) {
-    console.log('Aucun souvenir trouvé dans les dossiers.');
+    console.log('Aucun souvenir trouvé dans Blob.');
     return;
   }
 
   for (const nom of [...allNames].sort()) {
-    const done = doneSet.has(nom) ? 1 : 0;
-    const webp = webpSet.has(nom) ? 1 : 0;
-    const miniature = miniatureSet.has(nom) ? 1 : 0;
-    await repo.upsert(nom, done, webp, miniature);
+    await repo.upsert(nom, 1, 1, 1);
   }
 
   console.log(`  ${allNames.size} souvenir(s) synchronisé(s).`);

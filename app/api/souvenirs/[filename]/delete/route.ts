@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth, currentUser } from '@clerk/nextjs/server';
-import { join } from 'path';
 import { isAdminEmail } from '@/utils/isAdmin';
 import { deleteSouvenir } from '@/utils/use-cases/deleteSouvenir';
-import { FileSystemSouvenirFileDeleter } from '@/utils/adapters/FileSystemSouvenirFileDeleter';
+import { VercelBlobSouvenirFileDeleter } from '@/utils/adapters/VercelBlobSouvenirFileDeleter';
 import { HttpSouvenirInventoryRepository } from '@/utils/adapters/HttpSouvenirInventoryRepository';
 
 function nomFromFilename(filename: string): string {
@@ -44,12 +43,7 @@ export async function DELETE(
     return NextResponse.json({ error: 'Nom invalide' }, { status: 400 });
   }
 
-  const cwd = process.cwd();
-  const fileDeleter = new FileSystemSouvenirFileDeleter(
-    join(cwd, 'data', 'input', 'done'),
-    join(cwd, 'data', 'souvenirs', 'webp'),
-    join(cwd, 'data', 'souvenirs', 'miniature')
-  );
+  const fileDeleter = new VercelBlobSouvenirFileDeleter();
   const inventoryRepo = new HttpSouvenirInventoryRepository();
 
   try {

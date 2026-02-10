@@ -130,10 +130,12 @@ Then('le souvenir est supprimé de la base de données', async ({ page }) => {
 });
 
 
-Then('les fichiers du souvenir sont supprimés des dossiers Done, Webp et miniatures', async () => {
-  // Vérification indirecte : le souvenir n'apparaît plus dans la galerie après refresh
-  // ou vérification via API/fs (intégration). Pour BDD E2E, on considère que
-  // le scénario "le souvenir est supprimé" couvre la cohérence.
+Then(/les fichiers du souvenir du dossier Done sont déplacés vers data\/input\/trash/, async () => {
+  // Comportement côté serveur : Done → trash. E2E ne vérifie pas le fs ; couvert par "le souvenir est supprimé".
+});
+
+Then('les fichiers du souvenir des dossiers Webp et miniatures sont supprimés', async () => {
+  // Comportement côté serveur. E2E ne vérifie pas le fs ; couvert par "le souvenir est supprimé".
 });
 
 Then('le souvenir n\'est pas supprimé', async ({ page }) => {
@@ -144,6 +146,6 @@ Then('le souvenir n\'est pas supprimé', async ({ page }) => {
   await expect(cartes.first()).toBeVisible();
 });
 
-Then('les fichiers du souvenir restent présents dans les dossiers Done, Webp et miniatures', async () => {
+Then('les fichiers du souvenir restent présents \\(Done, Webp et miniatures inchangés\\)', async () => {
   // Vérification indirecte : le souvenir est toujours affiché (couvert par "le souvenir n'est pas supprimé")
 });

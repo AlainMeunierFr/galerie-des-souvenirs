@@ -24,8 +24,9 @@
   - Lorsque l’administrateur clique sur le bouton « Supprimer » d’une carte, une **pop-up** (ou dialogue modal) l’invite à **confirmer** son choix.
   - S’il confirme :
     - L’image (le souvenir) est **supprimée de la base de données**.
-    - Les fichiers associés sont supprimés des dossiers **Done**, **Webp** et **miniatures** (selon la structure existante du projet).
-  - S’il annule ou ferme sans confirmer, aucune suppression n’est effectuée.
+    - Les fichiers du dossier **Done** (`data/input/done/`) sont **déplacés** vers `data/input/trash/` (et non supprimés définitivement).
+    - Les fichiers des dossiers **Webp** et **miniatures** sont **supprimés** (fichiers retirés du disque).
+  - S’il annule ou ferme sans confirmer, aucune suppression ni déplacement n'est effectué.
 
 - **CA4 - Comportement sans ambiguïté** :
   - Le fait d’être admin ou non est déterminé uniquement par l’email de la session (alain@maep.fr = admin). Aucun autre mécanisme (rôle en base, flag, etc.) n’est exigé dans cette US ; des évolutions (table des admins, rôles) pourront faire l’objet d’une US ultérieure.

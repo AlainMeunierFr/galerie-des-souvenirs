@@ -16,4 +16,7 @@
   - Le H1 n'est plus centré verticalement.
 - **CA3 - Page connectée : galerie** :
   - Le texte « Voici les photos » est remplacé par une galerie de photos.
-  - La galerie est affichée sur 4 colonnes.
+  - La galerie est affichée sur 4 colonnes (ou équivalent selon le layout).
+- **CA4 - Réglage de la taille des cartes (zoom)** :
+  - L'utilisateur connecté peut régler la taille d'affichage des cartes (ex. curseur Petit ↔ Grand) ; à « petit », plusieurs cartes par ligne ; à « grand », une carte par ligne ou moins de cartes par ligne.
+- **Note implémentation** : La grille peut utiliser un layout dynamique (ex. Muuri) pour le filtrage et le redimensionnement ; les CA ci-dessus décrivent le comportement attendu, pas la techno.
