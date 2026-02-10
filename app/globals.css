@@ -135,13 +135,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.35rem;
-  aspect-ratio: 1;
+  padding: 0.35rem 0.5rem;
+  min-height: 0;
   border: 1px solid var(--foreground);
   border-radius: 0.25rem;
   background: transparent;
   color: var(--foreground);
   cursor: pointer;
+  font-size: 0.75rem;
+  line-height: 1.2;
   transition: background 0.15s, color 0.15s;
 }
 
