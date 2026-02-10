@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-02-10T19:53:48.104Z",
+  "timestamp": "2026-02-10T21:59:34.219Z",
   "status": "in_progress",
   "failedAtStep": null,
   "us": {
-    "files": 8,
+    "files": 10,
     "sprints": 1,
-    "caTotal": 28,
-    "enCours": "US-5.3"
+    "caTotal": 36,
+    "enCours": "—"
   },
   "tu": {
     "files": 16,
@@ -14,28 +14,28 @@
     "passed": 43,
     "failed": 0,
     "skipped": 0,
-    "durationMs": 3093,
+    "durationMs": 3923,
     "total": 43
   },
   "ti": {
-    "files": 2,
-    "tests": 5,
-    "passed": 5,
+    "files": 3,
+    "tests": 15,
+    "passed": 15,
     "failed": 0,
     "skipped": 0,
-    "durationMs": 603,
-    "total": 5
+    "durationMs": 921,
+    "total": 15
   },
   "bdd": {
-    "featureFiles": 8,
-    "scenarios": 27,
-    "stepsTotal": 93,
-    "stepDefinitionFiles": 5,
+    "featureFiles": 10,
+    "scenarios": 42,
+    "stepsTotal": 183,
+    "stepDefinitionFiles": 7,
     "passed": 10,
     "failed": 0,
-    "skipped": 17,
-    "durationMs": 42628,
-    "total": 27
+    "skipped": 32,
+    "durationMs": 55863,
+    "total": 42
   },
   "e2e": {
     "scenarios": 5,
@@ -45,7 +45,7 @@
     "skipped": 0,
     "stepsPassed": null,
     "stepsFailed": null,
-    "durationMs": 1048,
+    "durationMs": 832,
     "total": 0,
     "files": 0,
     "tests": 0

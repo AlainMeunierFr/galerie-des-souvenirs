@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef } from 'react';
 import type { InteretValeur } from '@/utils';
 import { getInteretLabel } from '@/utils/interetLabels';
 
@@ -33,6 +34,11 @@ type CarteSouvenirProps = {
   disabled?: boolean;
   isAdmin?: boolean;
   onDelete?: (souvenirNom: string) => void;
+  /** Sélection pour étiquettes (admin) : coché = inclus dans la sélection. shiftKey = true si Shift était enfoncé au clic (plage). */
+  selected?: boolean;
+  onSelectionChange?: (souvenirNom: string, selected: boolean, shiftKey?: boolean) => void;
+  /** Étiquettes affectées à ce souvenir (affichage) */
+  etiquettesSurCarte?: string[];
 };
 
 function souvenirNom(filename: string): string {
@@ -46,13 +52,33 @@ export default function CarteSouvenir({
   disabled = false,
   isAdmin = false,
   onDelete,
+  selected = false,
+  onSelectionChange,
+  etiquettesSurCarte = [],
 }: CarteSouvenirProps) {
   const nom = souvenirNom(filename);
+  const lastShiftKeyRef = useRef(false);
 
   return (
     <figure className="galerie-carte">
-      {/* eslint-disable-next-line @next/next/no-img-element -- images servies par l’API /api/souvenirs */}
-      <img src={`/api/souvenirs/${filename}`} alt="" loading="lazy" />
+      <div className="galerie-carte-image-wrapper">
+        {/* eslint-disable-next-line @next/next/no-img-element -- images servies par l'API /api/souvenirs */}
+        <img src={`/api/souvenirs/${filename}`} alt="" loading="lazy" />
+        {isAdmin && (
+          <div className="galerie-carte-etiquette-checkbox" aria-hidden="false">
+            <input
+              type="checkbox"
+              checked={selected}
+              onMouseDown={(e) => {
+                lastShiftKeyRef.current = e.shiftKey;
+              }}
+              onChange={() => onSelectionChange?.(nom, !selected, lastShiftKeyRef.current)}
+              aria-label={`Sélectionner ${nom} pour les étiquettes`}
+              data-testid={`etiquette-checkbox-${nom}`}
+            />
+          </div>
+        )}
+      </div>
       {isAdmin && onDelete ? (
         <div className="galerie-carte-boutons" role="group" aria-label="Actions admin">
           <button
@@ -108,6 +134,13 @@ export default function CarteSouvenir({
             </span>
             <span className="galerie-carte-bouton-text">{getInteretLabel('pas intéressé')}</span>
           </button>
+        </div>
+      )}
+      {etiquettesSurCarte.length > 0 && (
+        <div className="galerie-carte-etiquettes" aria-label="Étiquettes du souvenir">
+          {etiquettesSurCarte.map((lib) => (
+            <span key={lib}>{lib}</span>
+          ))}
         </div>
       )}
     </figure>

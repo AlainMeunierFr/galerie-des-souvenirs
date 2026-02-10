@@ -120,6 +120,7 @@ Given(
 });
 
 When('je lance le script db:souvenirs-sync', async () => {
+  test.setTimeout(60_000); // script Blob + DB peut dépasser 30s
   await runScript('db:souvenirs-sync');
 });
 

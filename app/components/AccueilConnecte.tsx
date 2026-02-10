@@ -63,6 +63,7 @@ export default function AccueilConnecte({ souvenirs }: AccueilConnecteProps) {
               Grand
             </span>
           </div>
+          <div id="zone-etiquettes-anchor" className="zone-etiquettes-anchor" />
         </div>
       </header>
       <section

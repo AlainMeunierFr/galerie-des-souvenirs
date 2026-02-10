@@ -10,3 +10,13 @@ export {
   interetTableExists,
   interetTableHasColumns,
 } from './interetTableSchema';
+export { ensureEtiquetteTable } from './ensureEtiquetteTable';
+export { ensureSouvenirEtiquetteTable } from './ensureSouvenirEtiquetteTable';
+export {
+  etiquetteTableExists,
+  etiquetteTableHasColumns,
+} from './etiquetteTableSchema';
+export {
+  souvenirEtiquetteTableExists,
+  souvenirEtiquetteTableHasColumns,
+} from './souvenirEtiquetteTableSchema';
