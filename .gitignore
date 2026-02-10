@@ -22,6 +22,9 @@
 # production
 /build
 
+# photos / médias lourds
+/data/input
+
 # misc
 .DS_Store
 *.pem
