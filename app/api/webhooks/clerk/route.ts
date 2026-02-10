@@ -1,8 +1,6 @@
 import { verifyWebhook } from '@clerk/nextjs/webhooks';
 import { NextRequest, NextResponse } from 'next/server';
-import { ensureUserTable } from '@/utils/db';
 import { syncUser, defaultUserRepository } from '@/utils';
-import { db } from '@/lib/db';
 
 function getPrimaryEmail(data: { email_addresses?: Array<{ id: string; email_address: string }>; primary_email_address_id?: string | null }): string {
   const emails = data.email_addresses ?? [];
@@ -17,12 +15,19 @@ export async function POST(req: NextRequest) {
   try {
     const evt = await verifyWebhook(req);
 
-    await ensureUserTable(db);
+    await defaultUserRepository.ensureTable();
 
     if (evt.type === 'user.created' || evt.type === 'user.updated') {
-      const email = getPrimaryEmail(evt.data as Parameters<typeof getPrimaryEmail>[0]);
+      const data = evt.data as Parameters<typeof getPrimaryEmail>[0];
+      const email = getPrimaryEmail(data);
       const id = evt.data.id;
-      console.log('[Webhook Clerk]', evt.type, { id, email, willSync: !!(id && email) });
+      console.log('[Webhook Clerk] payload:', evt.type, {
+        id,
+        email,
+        primary_email_address_id: data.primary_email_address_id,
+        email_addresses: data.email_addresses?.map((e) => ({ id: e.id, email_address: e.email_address })),
+        willSync: !!(id && email),
+      });
       if (id && email) {
         await syncUser(defaultUserRepository, evt.data.id, email);
         console.log('[Webhook Clerk] syncUser done for', email);

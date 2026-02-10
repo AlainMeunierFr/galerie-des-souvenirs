@@ -1,12 +1,11 @@
 import { LibsqlUserRepository } from '@/utils/adapters/LibsqlUserRepository';
 import { db } from '@/lib/db';
-import { ensureUserTable } from '@/utils/db/ensureUserTable';
 
 describe('LibsqlUserRepository', () => {
   const repo = new LibsqlUserRepository(db);
 
   beforeAll(async () => {
-    await ensureUserTable(db);
+    await repo.ensureTable();
   });
 
   beforeEach(async () => {

@@ -4,6 +4,7 @@ import type { UserRepository } from '@/utils/domain/ports/UserRepository';
 describe('syncUser', () => {
   it('crée un utilisateur si aucun avec ce clerk_id', async () => {
     const repo: UserRepository = {
+      ensureTable: jest.fn(),
       findByClerkId: () => Promise.resolve(null),
       create: jest.fn().mockResolvedValue({
         id: 1,
@@ -21,6 +22,7 @@ describe('syncUser', () => {
 
   it('met à jour l\'email si l\'utilisateur existe et l\'email a changé', async () => {
     const repo: UserRepository = {
+      ensureTable: jest.fn(),
       findByClerkId: () =>
         Promise.resolve({
           id: 1,
@@ -39,6 +41,7 @@ describe('syncUser', () => {
 
   it('ne fait rien si l\'utilisateur existe avec le même email', async () => {
     const repo: UserRepository = {
+      ensureTable: jest.fn(),
       findByClerkId: () =>
         Promise.resolve({
           id: 1,

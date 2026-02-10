@@ -1,7 +1,6 @@
 import { createBdd, test } from 'playwright-bdd';
 import { db } from '@/lib/db';
 import {
-  ensureUserTable,
   userTableExists,
   userTableHasColumns,
   defaultUserRepository as userRepo,
@@ -13,7 +12,7 @@ const SKIP_CLERK =
   'Inscription et modification Clerk nécessitent CLERK_TEST_EMAIL, CLERK_TEST_PASSWORD et implémentation des webhooks (TDD-front-end)';
 
 Given('la base de données est initialisée', async () => {
-  await ensureUserTable(db);
+  await userRepo.ensureTable();
 });
 
 Then('la table user existe', async () => {

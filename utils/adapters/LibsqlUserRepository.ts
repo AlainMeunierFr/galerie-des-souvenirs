@@ -1,9 +1,14 @@
 import type { Client } from '@libsql/client';
 import type { User } from '@/types/User';
 import type { UserRepository } from '@/utils/domain/ports/UserRepository';
+import { ensureUserTable } from '@/utils/db/ensureUserTable';
 
 export class LibsqlUserRepository implements UserRepository {
   constructor(private db: Client) {}
+
+  async ensureTable(): Promise<void> {
+    await ensureUserTable(this.db);
+  }
 
   async create(clerk_id: string, email: string): Promise<User> {
     const result = await this.db.execute({
