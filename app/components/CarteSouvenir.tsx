@@ -1,6 +1,7 @@
 'use client';
 
 import type { InteretValeur } from '@/utils';
+import { getInteretLabel } from '@/utils/interetLabels';
 
 type CarteSouvenirProps = {
   filename: string;
@@ -23,6 +24,7 @@ export default function CarteSouvenir({
 
   return (
     <figure className="galerie-carte">
+      {/* eslint-disable-next-line @next/next/no-img-element -- images servies par l’API /api/souvenirs */}
       <img src={`/api/souvenirs/${filename}`} alt="" loading="lazy" />
       <div className="galerie-carte-boutons" role="group" aria-label="Intérêt">
         <button
@@ -32,7 +34,7 @@ export default function CarteSouvenir({
           aria-pressed={interet === 'oui'}
           data-testid={`interet-oui-${nom}`}
         >
-          Intéressé
+          {getInteretLabel('intéressé')}
         </button>
         <button
           type="button"
@@ -41,7 +43,7 @@ export default function CarteSouvenir({
           aria-pressed={interet === 'non'}
           data-testid={`interet-non-${nom}`}
         >
-          Pas intéressé
+          {getInteretLabel('pas intéressé')}
         </button>
         <button
           type="button"
@@ -50,7 +52,7 @@ export default function CarteSouvenir({
           aria-pressed={interet === null}
           data-testid={`interet-null-${nom}`}
         >
-          Pas prononcé
+          {getInteretLabel('pas prononcé')}
         </button>
       </div>
     </figure>

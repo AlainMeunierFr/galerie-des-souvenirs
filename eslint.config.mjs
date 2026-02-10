@@ -18,6 +18,7 @@ const eslintConfig = defineConfig([
     ".features-gen/**",
     "test-results/**",
     "node_modules/**",
+    "coverage/**",
   ]),
 ]);
 

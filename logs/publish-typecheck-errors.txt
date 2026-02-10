@@ -1,8 +1,8 @@
 === Contrôle de typage (TypeScript) - ÉCHEC ===
 
 === stdout ===
-scripts/convert-heic-to-webp.ts(33,33): error TS7016: Could not find a declaration file for module 'heic-convert'. 'C:/Dev/galerie-des-souvenirs/node_modules/heic-convert/index.js' implicitly has an 'any' type.
-  Try `npm i --save-dev @types/heic-convert` if it exists or add a new declaration (.d.ts) file containing `declare module 'heic-convert';`
+scripts/convert-heic-to-webp.ts(75,9): error TS2322: Type 'NonSharedBuffer' is not assignable to type 'ArrayBufferLike'.
+  Type 'Buffer<ArrayBuffer>' is missing the following properties from type 'SharedArrayBuffer': growable, maxByteLength, grow
 
 === stderr ===
 

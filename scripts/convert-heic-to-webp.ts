@@ -7,8 +7,9 @@
  * Référence chaque conversion réussie via SouvenirInventoryRepository (archi hexagonale).
  */
 
-import { readdir, readFile, writeFile, mkdir, rename } from 'fs/promises';
+import { readdir, readFile, writeFile, mkdir, rename, access } from 'fs/promises';
 import { join, resolve } from 'path';
+import { constants } from 'fs';
 import sharp from 'sharp';
 import { config } from 'dotenv';
 import { LibsqlSouvenirInventoryRepository } from '@/utils/adapters/LibsqlSouvenirInventoryRepository';
@@ -30,6 +31,16 @@ async function getInventoryRepository(): Promise<SouvenirInventoryRepository | n
 }
 
 async function main() {
+  try {
+    await access(SRC_DIR, constants.R_OK);
+  } catch {
+    console.error(
+      `Dossier source introuvable ou illisible : ${SRC_DIR}\n` +
+        'Créez le dossier et placez-y les fichiers HEIC (ex. .\\data\\input).'
+    );
+    process.exit(1);
+  }
+
   const convert = (await import('heic-convert')).default;
   const inventoryRepo = await getInventoryRepository();
 
@@ -61,10 +72,7 @@ async function main() {
     try {
       const inputBuffer = await readFile(srcPath);
       const jpegBuffer = await convert({
-        buffer: inputBuffer.buffer.slice(
-          inputBuffer.byteOffset,
-          inputBuffer.byteOffset + inputBuffer.byteLength
-        ) as ArrayBuffer,
+        buffer: inputBuffer as unknown as ArrayBufferLike,
         format: 'JPEG',
         quality: 0.9,
       });

@@ -1,14 +1,25 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import type { InteretValeur } from '@/utils';
+import type { InteretCle } from '@/utils';
 import CarteSouvenir from './CarteSouvenir';
+
+const CLE_TO_VALEUR: Record<InteretCle, InteretValeur> = {
+  'intéressé': 'oui',
+  'pas intéressé': 'non',
+  'pas prononcé': null,
+};
 
 type GalerieCartesProps = {
   souvenirs: string[];
+  selectedFilterKeys?: Set<InteretCle>;
 };
 
-export default function GalerieCartes({ souvenirs }: GalerieCartesProps) {
+export default function GalerieCartes({
+  souvenirs,
+  selectedFilterKeys,
+}: GalerieCartesProps) {
   const [interets, setInterets] = useState<Record<string, InteretValeur>>({});
   const [loading, setLoading] = useState(true);
   const [pending, setPending] = useState<Set<string>>(new Set());
@@ -59,9 +70,28 @@ export default function GalerieCartes({ souvenirs }: GalerieCartesProps) {
     []
   );
 
+  const selectedValeurs = useMemo(
+    () =>
+      selectedFilterKeys
+        ? new Set(
+            [...selectedFilterKeys].map((cle) => CLE_TO_VALEUR[cle])
+          )
+        : null,
+    [selectedFilterKeys]
+  );
+
+  const displayedSouvenirs = useMemo(() => {
+    if (!selectedValeurs) return souvenirs;
+    return souvenirs.filter((filename) => {
+      const nom = filename.replace(/\.(webp|heic|jpe?g)$/i, '');
+      const v: InteretValeur = interets[nom] ?? null;
+      return selectedValeurs.has(v);
+    });
+  }, [souvenirs, interets, selectedValeurs]);
+
   return (
     <>
-      {souvenirs.map((filename) => {
+      {displayedSouvenirs.map((filename) => {
         const nom = filename.replace(/\.(webp|heic|jpe?g)$/i, '');
         return (
           <CarteSouvenir

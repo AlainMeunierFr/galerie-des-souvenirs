@@ -6,11 +6,6 @@
 > eslint .
 
 
-C:\Dev\galerie-des-souvenirs\app\api\interet\route.ts
-  12:7  error  'user' is never reassigned. Use 'const' instead  prefer-const
-  47:7  error  'user' is never reassigned. Use 'const' instead  prefer-const
-  73:7  error  'user' is never reassigned. Use 'const' instead  prefer-const
-
 C:\Dev\galerie-des-souvenirs\app\components\CarteSouvenir.tsx
   26:7  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
 
@@ -28,8 +23,11 @@ C:\Dev\galerie-des-souvenirs\tests\bdd\sync-utilisateurs.steps.ts
   45:73  warning  'page' is defined but never used       @typescript-eslint/no-unused-vars
   45:81  warning  '_newEmail' is defined but never used  @typescript-eslint/no-unused-vars
 
-✖ 12 problems (3 errors, 9 warnings)
-  3 errors and 1 warning potentially fixable with the `--fix` option.
+C:\Dev\galerie-des-souvenirs\tests\jest-sequencer.cjs
+  3:19  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+✖ 10 problems (1 error, 9 warnings)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
 
 
 === stderr ===

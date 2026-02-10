@@ -84,8 +84,9 @@ Then(
   }
 );
 
-Given('un fichier HEIC {string} dans data\\/input', async ({}, _filename: string) => {
+Given('un fichier HEIC {string} dans data\\/input', async ({}, filename: string) => {
   test.skip(true, SKIP_CA2);
+  void filename;
 });
 
 When('je lance le script convert-heic-to-webp', async () => {

@@ -20,6 +20,10 @@ describe('Interet — intégration', () => {
     await db.execute('DELETE FROM user');
   });
 
+  afterAll(() => {
+    if (!db.closed) db.close();
+  });
+
   it('la table interet existe après ensureInteretTable', async () => {
     const exists = await interetTableExists(db);
     expect(exists).toBe(true);

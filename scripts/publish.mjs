@@ -40,9 +40,11 @@ L'étape **ESLint** a échoué. Consulte le log ci-dessous pour identifier les p
     id: 'tu',
     name: 'Tests unitaires (Jest)',
     cmd: 'npx',
-    // Limité à tests/unit/utils : les tests app/ déclenchent un stack overflow Next.js+Jest après le 1er fichier ; forceExit pour libérer les handles libsql.
-    args: ['jest', '--config', 'jest.config.mjs', '--testPathPattern', 'tests/unit/utils', '--json', '--outputFile', 'test-results/jest-unit.json', '--forceExit'],
-    spawnEnv: { NODE_OPTIONS: '--max-old-space-size=8192' },
+    args: ['jest', '--config', 'jest.config.mjs', '--json', '--outputFile', 'test-results/jest-unit.json'],
+    spawnEnv: {
+        NODE_OPTIONS: '--max-old-space-size=8192',
+        NEXT_UNHANDLED_REJECTION_FILTER: 'disabled',
+      },
     prompt: `## Erreur tests unitaires
 
 L'étape **Tests unitaires (Jest)** a échoué. Consulte le log ci-dessous.
@@ -53,8 +55,11 @@ L'étape **Tests unitaires (Jest)** a échoué. Consulte le log ci-dessous.
     id: 'ti',
     name: 'Tests d\'intégration (Jest)',
     cmd: 'npx',
-    args: ['jest', '--config', 'jest.integration.config.mjs', '--json', '--outputFile', 'test-results/jest-integration.json', '--forceExit'],
-    spawnEnv: { NODE_OPTIONS: '--max-old-space-size=8192' },
+    args: ['jest', '--config', 'jest.integration.config.mjs', '--json', '--outputFile', 'test-results/jest-integration.json'],
+    spawnEnv: {
+        NODE_OPTIONS: '--max-old-space-size=8192',
+        NEXT_UNHANDLED_REJECTION_FILTER: 'disabled',
+      },
     prompt: `## Erreur tests d'intégration
 
 L'étape **Tests d'intégration (Jest)** a échoué. Consulte le log ci-dessous.

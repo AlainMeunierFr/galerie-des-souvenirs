@@ -7,6 +7,11 @@ export type {
   InteretRepository,
   InteretValeur,
 } from './domain/ports/InteretRepository';
+export {
+  getInteretLabel,
+  getInteretOptions,
+} from './interetLabels';
+export type { InteretCle, InteretOption } from './interetLabels';
 export type { UserRepository } from './domain/ports/UserRepository';
 export {
   ensureUserTable,

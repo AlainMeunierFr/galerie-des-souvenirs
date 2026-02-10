@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { HomePageContent } from '@/app/page';
+import HomePageContent from '@/app/HomePageContent';
 
 jest.mock('@clerk/nextjs', () => ({
   SignedIn: () => null,

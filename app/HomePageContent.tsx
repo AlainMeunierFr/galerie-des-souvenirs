@@ -1,5 +1,5 @@
 import { SignedIn, SignedOut } from '@clerk/nextjs';
-import GalerieCartes from './components/GalerieCartes';
+import AccueilConnecte from './components/AccueilConnecte';
 
 type HomePageContentProps = {
   souvenirs: string[];
@@ -20,16 +20,7 @@ export default function HomePageContent({ souvenirs }: HomePageContentProps) {
         </div>
       </SignedOut>
       <SignedIn>
-        <main className="p-4">
-          <h1 className="text-left mb-4">Bienvenue sur la galerie des souvenirs</h1>
-          <section
-            className="galerie"
-            data-testid="galerie"
-            aria-label="Galerie de photos"
-          >
-            <GalerieCartes souvenirs={souvenirs} />
-          </section>
-        </main>
+        <AccueilConnecte souvenirs={souvenirs} />
       </SignedIn>
     </>
   );

@@ -2,6 +2,10 @@ import nextJest from 'next/jest.js';
 
 const createJestConfig = nextJest({ dir: '.' });
 
+/**
+ * Tests unitaires (utils + app). Pour éviter un stack overflow Next.js en Jest,
+ * lancer avec NEXT_UNHANDLED_REJECTION_FILTER=disabled (déjà fait dans npm run publish).
+ */
 /** @type {import('jest').Config} */
 const config = {
   testEnvironment: 'jsdom',
@@ -30,6 +34,7 @@ const config = {
     },
   },
   setupFilesAfterEnv: ['<rootDir>/tests/setupJest.ts'],
+  testSequencer: '<rootDir>/tests/jest-sequencer.cjs',
 };
 
 export default createJestConfig(config);

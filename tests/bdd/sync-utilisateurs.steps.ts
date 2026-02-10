@@ -34,16 +34,22 @@ Then('un utilisateur avec l\'email {string} existe dans la base locale', async (
   if (!user) throw new Error(`Aucun utilisateur avec l'email ${email} en base`);
 });
 
-Given('je suis connecté avec l\'email {string}', async ({ page }, _email: string) => {
+Given('je suis connecté avec l\'email {string}', async ({ page }, email: string) => {
   test.skip(true, SKIP_CLERK);
+  void page;
+  void email;
 });
 
-When('je m\'inscris via Clerk avec l\'email {string}', async ({ page }, _email: string) => {
+When('je m\'inscris via Clerk avec l\'email {string}', async ({ page }, email: string) => {
   test.skip(true, SKIP_CLERK);
+  void page;
+  void email;
 });
 
-When('je modifie mon email en {string} dans mon profil Clerk', async ({ page }, _newEmail: string) => {
+When('je modifie mon email en {string} dans mon profil Clerk', async ({ page }, newEmail: string) => {
   test.skip(true, SKIP_CLERK);
+  void page;
+  void newEmail;
 });
 
 Then('la base locale contient un utilisateur avec l\'email {string}', async ({}, email: string) => {
