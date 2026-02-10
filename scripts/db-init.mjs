@@ -36,10 +36,22 @@ CREATE TABLE IF NOT EXISTS user (
 );
 `;
 
+const SOUVENIR_TABLE_SQL = `
+CREATE TABLE IF NOT EXISTS souvenir (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nom TEXT UNIQUE NOT NULL,
+  done INTEGER NOT NULL DEFAULT 0,
+  webp INTEGER NOT NULL DEFAULT 0,
+  miniature INTEGER NOT NULL DEFAULT 0
+);
+`;
+
 async function main() {
   console.log('Initialisation du schéma...');
   await db.execute(USER_TABLE_SQL);
   console.log('Table user créée ou déjà existante.');
+  await db.execute(SOUVENIR_TABLE_SQL);
+  console.log('Table souvenir créée ou déjà existante.');
 }
 
 main().catch((err) => {

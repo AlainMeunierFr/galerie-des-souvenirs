@@ -12,9 +12,10 @@
     "test:bdd": "npx bddgen && npx playwright test",
     "test:e2e": "npx playwright test --config=playwright.e2e.config.ts",
     "publish": "node scripts/publish.mjs",
-    "convert:heic": "node scripts/convert-heic-to-webp.mjs",
+    "convert:heic": "npx tsx scripts/convert-heic-to-webp.ts",
     "db:inspect": "node scripts/db-inspect.mjs",
-    "db:init": "node scripts/db-init.mjs"
+    "db:init": "node scripts/db-init.mjs",
+    "db:souvenirs-sync": "npx tsx scripts/db-souvenirs-sync.ts"
   },
   "dependencies": {
     "@clerk/localizations": "^3.35.3",
@@ -37,6 +38,7 @@
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
+    "@types/heic-convert": "^2.1.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -50,6 +52,7 @@
     "playwright-bdd": "^8.4.2",
     "sharp": "^0.34.5",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

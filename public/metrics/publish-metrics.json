@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-02-10T01:57:33.063Z",
+  "timestamp": "2026-02-10T03:02:53.034Z",
   "status": "in_progress",
   "failedAtStep": null,
   "us": {
-    "files": 4,
+    "files": 5,
     "sprints": 1,
-    "caTotal": 10,
+    "caTotal": 14,
     "enCours": "**Dernière revue (GO NEXT)** : US-2.1 — Afficher la galerie"
   },
   "tu": {
@@ -14,7 +14,7 @@
     "passed": 27,
     "failed": 0,
     "skipped": 0,
-    "durationMs": 5696,
+    "durationMs": 5784,
     "total": 27
   },
   "ti": {
@@ -23,19 +23,19 @@
     "passed": 1,
     "failed": 0,
     "skipped": 0,
-    "durationMs": 493,
+    "durationMs": 453,
     "total": 1
   },
   "bdd": {
-    "featureFiles": 5,
-    "scenarios": 13,
-    "stepsTotal": 38,
-    "stepDefinitionFiles": 2,
-    "passed": 8,
+    "featureFiles": 6,
+    "scenarios": 16,
+    "stepsTotal": 48,
+    "stepDefinitionFiles": 3,
+    "passed": 10,
     "failed": 0,
-    "skipped": 5,
-    "durationMs": 13380,
-    "total": 13
+    "skipped": 6,
+    "durationMs": 28916,
+    "total": 16
   },
   "e2e": {
     "scenarios": 5,
@@ -45,7 +45,7 @@
     "skipped": 0,
     "stepsPassed": null,
     "stepsFailed": null,
-    "durationMs": 169,
+    "durationMs": 146,
     "total": 0,
     "files": 0,
     "tests": 0

@@ -21,8 +21,13 @@ export async function POST(req: NextRequest) {
 
     if (evt.type === 'user.created' || evt.type === 'user.updated') {
       const email = getPrimaryEmail(evt.data as Parameters<typeof getPrimaryEmail>[0]);
-      if (evt.data.id && email) {
+      const id = evt.data.id;
+      console.log('[Webhook Clerk]', evt.type, { id, email, willSync: !!(id && email) });
+      if (id && email) {
         await syncUser(defaultUserRepository, evt.data.id, email);
+        console.log('[Webhook Clerk] syncUser done for', email);
+      } else {
+        console.log('[Webhook Clerk] skip sync: id or email missing');
       }
     }
 

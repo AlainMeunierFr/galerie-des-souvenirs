@@ -120,7 +120,7 @@ L'étape **Commit** a échoué. Consulte le log ci-dessous.
     id: 'push',
     name: 'Push GitHub',
     cmd: 'git',
-    args: ['push'],
+    args: ['push', '--progress'],
     prompt: `## Erreur Push GitHub
 
 L'étape **Push** a échoué (réseau, authentification, conflits, etc.). Consulte le log ci-dessous.

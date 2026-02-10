@@ -1,8 +1,16 @@
 export { FileSystemSouvenirRepository } from './adapters/FileSystemSouvenirRepository';
 export { LibsqlUserRepository } from './adapters/LibsqlUserRepository';
 export type { SouvenirRepository } from './domain/ports/SouvenirRepository';
+export type { SouvenirInventoryRepository } from './domain/ports/SouvenirInventoryRepository';
 export type { UserRepository } from './domain/ports/UserRepository';
-export { ensureUserTable, userTableExists, userTableHasColumns } from './db';
+export {
+  ensureUserTable,
+  ensureSouvenirTable,
+  userTableExists,
+  userTableHasColumns,
+  souvenirTableExists,
+  souvenirTableHasColumns,
+} from './db';
 export { getSouvenirFilenames } from './use-cases/getSouvenirFilenames';
 export { getSouvenirBuffer } from './use-cases/getSouvenirBuffer';
 export { syncUser } from './use-cases/syncUser';
