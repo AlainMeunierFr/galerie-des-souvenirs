@@ -4,8 +4,7 @@ import { join } from 'path';
 import { isAdminEmail } from '@/utils/isAdmin';
 import { deleteSouvenir } from '@/utils/use-cases/deleteSouvenir';
 import { FileSystemSouvenirFileDeleter } from '@/utils/adapters/FileSystemSouvenirFileDeleter';
-import { LibsqlSouvenirInventoryRepository } from '@/utils/adapters/LibsqlSouvenirInventoryRepository';
-import { db } from '@/lib/db';
+import { HttpSouvenirInventoryRepository } from '@/utils/adapters/HttpSouvenirInventoryRepository';
 
 function nomFromFilename(filename: string): string {
   return filename.replace(/\.(webp|heic|jpe?g)$/i, '');
@@ -51,7 +50,7 @@ export async function DELETE(
     join(cwd, 'data', 'souvenirs', 'webp'),
     join(cwd, 'data', 'souvenirs', 'miniature')
   );
-  const inventoryRepo = new LibsqlSouvenirInventoryRepository(db);
+  const inventoryRepo = new HttpSouvenirInventoryRepository();
 
   try {
     await deleteSouvenir(nom, inventoryRepo, fileDeleter);
