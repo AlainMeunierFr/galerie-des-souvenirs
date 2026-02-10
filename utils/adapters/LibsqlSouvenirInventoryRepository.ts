@@ -21,4 +21,11 @@ export class LibsqlSouvenirInventoryRepository
       args: [nom, done, webp, miniature, done, webp, miniature],
     });
   }
+
+  async delete(nom: string): Promise<void> {
+    await this.db.execute({
+      sql: 'DELETE FROM souvenir WHERE nom = ?',
+      args: [nom],
+    });
+  }
 }

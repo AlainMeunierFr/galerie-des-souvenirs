@@ -4,4 +4,5 @@
  */
 export interface SouvenirInventoryRepository {
   upsert(nom: string, done: number, webp: number, miniature: number): Promise<void>;
+  delete(nom: string): Promise<void>;
 }

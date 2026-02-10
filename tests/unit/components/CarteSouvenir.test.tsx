@@ -22,4 +22,32 @@ describe('CarteSouvenir', () => {
       screen.getByRole('button', { name: getInteretLabel('pas prononcé') })
     ).toBeInTheDocument();
   });
+
+  it('affiche le bouton Supprimer quand isAdmin est true', () => {
+    const onDelete = jest.fn();
+    render(
+      <CarteSouvenir
+        filename="IMG_001.webp"
+        interet={null}
+        onInteretChange={jest.fn()}
+        isAdmin
+        onDelete={onDelete}
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Supprimer' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: getInteretLabel('intéressé') })).not.toBeInTheDocument();
+  });
+
+  it('affiche les 3 boutons d\'intérêt quand isAdmin est false', () => {
+    render(
+      <CarteSouvenir
+        filename="IMG_001.webp"
+        interet={null}
+        onInteretChange={jest.fn()}
+        isAdmin={false}
+      />
+    );
+    expect(screen.getByRole('button', { name: getInteretLabel('intéressé') })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Supprimer' })).not.toBeInTheDocument();
+  });
 });

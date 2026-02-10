@@ -17,6 +17,14 @@
   --galerie-figure-radius: 0.5rem;
   --galerie-figure-bg: #e5e5e5;
   --galerie-breakpoint: 768px;
+  /* Muuri zoom (taille des cartes) */
+  --galerie-item-size: 180px;
+  /* Modal et action destructive (US-5.3) */
+  --modal-overlay-bg: rgba(0, 0, 0, 0.5);
+  --modal-bg: var(--background);
+  --modal-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  --destructive-border: #b91c1c;
+  --destructive-bg: #fef2f2;
 }
 
 @theme inline {
@@ -31,6 +39,8 @@
     --background: #0a0a0a;
     --foreground: #ededed;
     --galerie-figure-bg: #262626;
+    --destructive-border: #ef4444;
+    --destructive-bg: #450a0a;
   }
 }
 
@@ -68,12 +78,12 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--galerie-gap);
+  width: 100%;
 }
 
-@media (min-width: 768px) {
-  .galerie {
-    grid-template-columns: repeat(4, 1fr);
-  }
+/* Section qui contient Muuri : une seule colonne pleine largeur (BDD garde class grid-cols-4) */
+.galerie.grid-cols-4 {
+  grid-template-columns: 1fr;
 }
 
 .galerie figure,
@@ -114,21 +124,29 @@ body {
 .galerie-carte-boutons {
   display: flex;
   gap: 0.25rem;
-  padding: 0.5rem;
+  padding: 0.35rem;
   background: var(--galerie-figure-bg);
   border-radius: 0 0 var(--galerie-figure-radius) var(--galerie-figure-radius);
 }
 
 .galerie-carte-boutons button {
   flex: 1;
-  padding: 0.35rem 0.5rem;
-  font-size: 0.75rem;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem;
+  aspect-ratio: 1;
   border: 1px solid var(--foreground);
   border-radius: 0.25rem;
   background: transparent;
   color: var(--foreground);
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
+}
+
+.galerie-carte-boutons button svg {
+  flex-shrink: 0;
 }
 
 .galerie-carte-boutons button:hover:not(:disabled) {
@@ -146,6 +164,29 @@ body {
   cursor: not-allowed;
 }
 
+/* Texte visible quand la carte fait ≥380px, icône sinon (largeur depuis muuri-item) */
+.galerie-muuri .muuri-item-content {
+  container-type: inline-size;
+  container-name: carte;
+}
+
+.galerie-carte-boutons .galerie-carte-bouton-icon {
+  display: inline-flex;
+}
+
+.galerie-carte-boutons .galerie-carte-bouton-text {
+  display: none;
+}
+
+@container carte (min-width: 380px) {
+  .galerie-carte-boutons .galerie-carte-bouton-icon {
+    display: none;
+  }
+  .galerie-carte-boutons .galerie-carte-bouton-text {
+    display: inline;
+  }
+}
+
 .galerie-carte-boutons--disabled {
   justify-content: center;
 }
@@ -154,4 +195,221 @@ body {
   font-size: 0.75rem;
   color: var(--foreground);
   opacity: 0.8;
+}
+
+/* Muuri — grille filtrable et zoom (US-5.2+) */
+.galerie-muuri {
+  position: relative;
+  width: 100%;
+  min-height: 120px;
+}
+
+/* Zoom : réglé par JS (--galerie-item-size en px, 140 à 600) */
+
+.galerie-muuri .muuri-item {
+  position: absolute;
+  width: var(--galerie-item-size);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
+}
+
+.galerie-muuri .muuri-item.muuri-item-dragging {
+  z-index: 3;
+}
+
+.galerie-muuri .muuri-item.muuri-item-releasing {
+  z-index: 2;
+}
+
+.galerie-muuri .muuri-item.muuri-item-hidden {
+  z-index: 0;
+  pointer-events: none;
+}
+
+.galerie-muuri .muuri-item-content {
+  width: calc(100% - var(--galerie-gap));
+  margin: calc(var(--galerie-gap) / 2);
+}
+
+.galerie-muuri .muuri-item-content .galerie-carte {
+  width: 100%;
+}
+
+.page-header-filtres {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Filtre Intérêt — style pills (type démo Muuri) */
+.filtreInteret {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.filtreInteret-legend {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.filtreInteret-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filtreInteret-option {
+  position: relative;
+  display: inline-block;
+}
+
+.filtreInteret-option input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+
+.filtreInteret-option span {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 9999px;
+  border: 2px solid var(--foreground);
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.filtreInteret-option span:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.filtreInteret-option input:checked + span {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+/* Zoom — curseur de petit (plusieurs par ligne) à grand (1 par ligne) */
+.galerie-zoom {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.galerie-zoom-label {
+  font-size: 0.875rem;
+  min-width: 4rem;
+}
+
+.galerie-zoom input[type="range"] {
+  width: 120px;
+  height: 0.5rem;
+  accent-color: var(--foreground);
+  cursor: pointer;
+}
+
+/* Modal de confirmation de suppression (US-5.3) */
+.modal-confirmation-suppression {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--modal-overlay-bg);
+  backdrop-filter: blur(2px);
+}
+
+.modal-confirmation-suppression h2,
+.modal-confirmation-suppression p,
+.modal-confirmation-suppression .modal-confirmation-actions {
+  max-width: 24rem;
+  width: 100%;
+  margin: 0;
+  padding: 1rem 1.5rem;
+  background: var(--modal-bg);
+  border: 1px solid var(--foreground);
+  border-bottom: none;
+  box-shadow: var(--modal-shadow);
+}
+
+.modal-confirmation-suppression h2 {
+  padding-bottom: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  border-radius: var(--galerie-figure-radius) var(--galerie-figure-radius) 0 0;
+}
+
+.modal-confirmation-suppression p {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--foreground);
+  opacity: 0.9;
+}
+
+.modal-confirmation-suppression .modal-confirmation-actions {
+  padding-top: 1rem;
+  border-bottom: 1px solid var(--foreground);
+  border-radius: 0 0 var(--galerie-figure-radius) var(--galerie-figure-radius);
+}
+
+.modal-confirmation-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.modal-confirmation-actions button {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.modal-confirmation-actions button:first-child {
+  background: var(--destructive-bg);
+  color: var(--destructive-border);
+  border: 1px solid var(--destructive-border);
+}
+
+.modal-confirmation-actions button:first-child:hover {
+  background: var(--destructive-border);
+  color: var(--background);
+}
+
+.modal-confirmation-actions button:last-child {
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--foreground);
+}
+
+.modal-confirmation-actions button:last-child:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+/* Bouton Supprimer sur les cartes (US-5.3) — action destructive */
+.galerie-carte-boutons[aria-label="Actions admin"] button {
+  border-color: var(--destructive-border);
+  color: var(--destructive-border);
+  background: var(--destructive-bg);
+}
+
+.galerie-carte-boutons[aria-label="Actions admin"] button:hover:not(:disabled) {
+  background: var(--destructive-border);
+  color: var(--background);
 }

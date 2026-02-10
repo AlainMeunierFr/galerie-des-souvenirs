@@ -85,7 +85,7 @@ La commande `/go-next` (touche `/` puis sélection) insère ce contenu dans le c
 6. **AVANT TDD** : proposer la **liste des baby steps** (tests incrémentaux) → validation utilisateur → inclure dans le prompt
 7. **Déléguer via Task** aux agents spécialisés (après validation)
 8. **Valider résultats** de chaque agent (revue)
-9. **Vérifier DoD** avant considérer terminé
+9. **Vérifier DoD** avant considérer terminé — incluant **`npm run lint`** (ESLint doit passer ; voir `lead-dev-revue.mdc`)
 10. **Commit et push** si validé
 
 ## 📚 Ressources

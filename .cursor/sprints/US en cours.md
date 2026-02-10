@@ -1,3 +1,3 @@
-US-5.2
-Filtre par intérêt et header fixe
-TDD-front-end
+US-5.3
+Privilèges administrateur
+Designer

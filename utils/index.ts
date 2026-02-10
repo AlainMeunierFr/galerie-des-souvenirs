@@ -3,10 +3,14 @@ export { LibsqlInteretRepository } from './adapters/LibsqlInteretRepository';
 export { LibsqlUserRepository } from './adapters/LibsqlUserRepository';
 export type { SouvenirRepository } from './domain/ports/SouvenirRepository';
 export type { SouvenirInventoryRepository } from './domain/ports/SouvenirInventoryRepository';
+export type { SouvenirFileDeleter } from './domain/ports/SouvenirFileDeleter';
+export { FileSystemSouvenirFileDeleter } from './adapters/FileSystemSouvenirFileDeleter';
+export { deleteSouvenir } from './use-cases/deleteSouvenir';
 export type {
   InteretRepository,
   InteretValeur,
 } from './domain/ports/InteretRepository';
+export { isAdminEmail } from './isAdmin';
 export {
   getInteretLabel,
   getInteretOptions,

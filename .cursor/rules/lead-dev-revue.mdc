@@ -7,6 +7,7 @@ alwaysApply: false
 
 ## Vérifications
 
+- **ESLint** : `npm run lint` doit passer sans erreur. ESLint est la base de la syntaxe et de la cohérence du code — **aucune livraison ne peut être validée si ESLint échoue**.
 - DoD spécifique du profil (architecture hexagonale, responsive, etc.)
 - Principes Clean Code (SOLID, pas de duplication, noms explicites)
 - Tests TDD/BDD avec **couverture 100%**
@@ -20,7 +21,7 @@ alwaysApply: false
 
 - ✅ **Corriger** écarts mineurs (typographie, structure)
 - ❌ **Retourner** tâches non conformes avec commentaires précis
-- 🚫 **BLOQUER** merges si couverture < 100%
+- 🚫 **BLOQUER** merges si couverture < 100% **ou si ESLint échoue**
 
 ## Stratégie Boy Scout
 

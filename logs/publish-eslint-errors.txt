@@ -6,28 +6,12 @@
 > eslint .
 
 
-C:\Dev\galerie-des-souvenirs\app\components\CarteSouvenir.tsx
-  26:7  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+C:\Dev\galerie-des-souvenirs\tests\bdd\admin-privileges.steps.ts
+  13:93   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  13:137  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  13:180  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
-C:\Dev\galerie-des-souvenirs\coverage\lcov-report\block-navigation.js
-  1:1  warning  Unused eslint-disable directive (no problems were reported)
-
-C:\Dev\galerie-des-souvenirs\tests\bdd\souvenirs-table.steps.ts
-  87:64  warning  '_filename' is defined but never used  @typescript-eslint/no-unused-vars
-
-C:\Dev\galerie-des-souvenirs\tests\bdd\sync-utilisateurs.steps.ts
-  37:59  warning  'page' is defined but never used       @typescript-eslint/no-unused-vars
-  37:67  warning  '_email' is defined but never used     @typescript-eslint/no-unused-vars
-  41:65  warning  'page' is defined but never used       @typescript-eslint/no-unused-vars
-  41:73  warning  '_email' is defined but never used     @typescript-eslint/no-unused-vars
-  45:73  warning  'page' is defined but never used       @typescript-eslint/no-unused-vars
-  45:81  warning  '_newEmail' is defined but never used  @typescript-eslint/no-unused-vars
-
-C:\Dev\galerie-des-souvenirs\tests\jest-sequencer.cjs
-  3:19  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
-
-✖ 10 problems (1 error, 9 warnings)
-  0 errors and 1 warning potentially fixable with the `--fix` option.
+✖ 3 problems (3 errors, 0 warnings)
 
 
 === stderr ===

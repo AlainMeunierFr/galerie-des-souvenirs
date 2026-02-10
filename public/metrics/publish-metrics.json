@@ -1,21 +1,21 @@
 {
-  "timestamp": "2026-02-10T15:22:00.388Z",
+  "timestamp": "2026-02-10T16:55:09.757Z",
   "status": "in_progress",
   "failedAtStep": null,
   "us": {
-    "files": 7,
+    "files": 8,
     "sprints": 1,
-    "caTotal": 23,
-    "enCours": "US-5.2"
+    "caTotal": 27,
+    "enCours": "US-5.3"
   },
   "tu": {
-    "files": 12,
-    "tests": 35,
-    "passed": 34,
+    "files": 16,
+    "tests": 44,
+    "passed": 43,
     "failed": 0,
     "skipped": 0,
-    "durationMs": 2474,
-    "total": 34
+    "durationMs": 2971,
+    "total": 43
   },
   "ti": {
     "files": 2,
@@ -23,19 +23,19 @@
     "passed": 5,
     "failed": 0,
     "skipped": 0,
-    "durationMs": 622,
+    "durationMs": 596,
     "total": 5
   },
   "bdd": {
-    "featureFiles": 7,
-    "scenarios": 20,
-    "stepsTotal": 63,
-    "stepDefinitionFiles": 4,
+    "featureFiles": 8,
+    "scenarios": 27,
+    "stepsTotal": 92,
+    "stepDefinitionFiles": 5,
     "passed": 10,
     "failed": 0,
-    "skipped": 10,
-    "durationMs": 36609,
-    "total": 20
+    "skipped": 17,
+    "durationMs": 42469,
+    "total": 27
   },
   "e2e": {
     "scenarios": 5,
@@ -45,7 +45,7 @@
     "skipped": 0,
     "stepsPassed": null,
     "stepsFailed": null,
-    "durationMs": 151,
+    "durationMs": 144,
     "total": 0,
     "files": 0,
     "tests": 0
@@ -57,8 +57,8 @@
     {
       "type": "tu",
       "message": "TU : nombre de tests déclarés (scan) ≠ nombre exécutés (API)",
-      "scan": 35,
-      "api": 34
+      "scan": 44,
+      "api": 43
     }
   ]
 }

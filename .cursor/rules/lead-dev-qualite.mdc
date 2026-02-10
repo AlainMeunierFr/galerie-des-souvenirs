@@ -66,7 +66,14 @@ Quand on crée un **nouveau type**, en particulier un **type de contenu** : **un
 
 ## Vérifications et Qualité
 
-### Linters
+### ESLint — obligatoire
+
+**ESLint est la base de la syntaxe et de la cohérence du code.** Aucun code ne peut être considéré comme livrable si ESLint échoue.
+
+- **Pour tout agent qui écrit du code** (TDD-back-end, TDD-front-end, Designer, etc.) : avant de considérer une livraison terminée, exécuter `npm run lint` et corriger toute erreur.
+- **Pour le Lead Dev** : à chaque revue, vérifier que `npm run lint` passe avant de valider. Voir `lead-dev-revue.mdc`.
+
+### Linters (IDE)
 Après chaque modification :
 - Lancer `read_lints` sur fichiers modifiés
 - Corriger erreurs évidentes
