@@ -22,8 +22,9 @@
 # production
 /build
 
-# photos / médias lourds
-/data/input
+# photos / médias lourds (ne pas commiter ; si déjà poussé : git rm -r --cached data/input puis commit)
+/data/input/
+data/input/
 
 # misc
 .DS_Store

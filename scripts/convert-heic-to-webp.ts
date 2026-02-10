@@ -2,7 +2,7 @@
 /**
  * Convertit les images HEIC de "data/input/*.HEIC" vers :
  * - data/souvenirs/miniature/*.webp (512px max, qualité 85)
- * - data/souvenirs/webp/*.webp (taille complète, qualité 85)
+ * - data/souvenirs/webp/*.webp (hauteur max 2000 px, qualité 85)
  * - data/input/done (HEIC déplacés)
  * Référence chaque conversion réussie via SouvenirInventoryRepository (archi hexagonale).
  */
@@ -23,6 +23,7 @@ const DONE_DIR = join(process.cwd(), 'data', 'input', 'done');
 const MINIATURE_DIR = join(process.cwd(), 'data', 'souvenirs', 'miniature');
 const WEBP_DIR = join(process.cwd(), 'data', 'souvenirs', 'webp');
 const MAX_SIZE = 512;
+const WEBP_MAX_HEIGHT = 2000;
 
 async function getInventoryRepository(): Promise<SouvenirInventoryRepository | null> {
   if (!process.env.TURSO_DATABASE_URL) return null;
@@ -82,7 +83,10 @@ async function main() {
         .clone()
         .resize(MAX_SIZE, MAX_SIZE, { fit: 'inside', withoutEnlargement: true })
         .toBuffer();
-      const webpFullBuffer = await pipeline.clone().toBuffer();
+      const webpFullBuffer = await pipeline
+        .clone()
+        .resize({ height: WEBP_MAX_HEIGHT, fit: 'inside', withoutEnlargement: true })
+        .toBuffer();
 
       await writeFile(miniaturePath, miniatureBuffer);
       await writeFile(webpPath, webpFullBuffer);
