@@ -73,7 +73,7 @@ export default function GalerieCartes({
     setPending((prev) => new Set(prev).add(nom));
     try {
       const filename = souvenirs.find((f) => f.replace(/\.(webp|heic|jpe?g)$/i, '') === nom) ?? `${nom}.webp`;
-      const res = await fetch(`/api/souvenirs/${encodeURIComponent(filename)}`, {
+      const res = await fetch(`/api/souvenirs/${encodeURIComponent(filename)}/delete`, {
         method: 'DELETE',
       });
       if (res.ok) {
