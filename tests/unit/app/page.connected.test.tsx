@@ -15,14 +15,12 @@ jest.mock('next/navigation', () => ({
 }));
 
 describe('Page d\'accueil - connecté', () => {
-  it('affiche le titre H1 en haut à gauche', async () => {
+  it('affiche la zone de filtres (titre H1 avec prénom dans le layout)', async () => {
     render(<HomePageContent souvenirs={[]} />);
     await waitFor(() => {
-      expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-        'Bienvenue sur la galerie des souvenirs'
-      );
+      expect(screen.getByTestId('zone-filtres')).toBeInTheDocument();
     });
-    expect(screen.getByRole('heading', { level: 1 })).toHaveClass('text-left');
+    // Le titre H1 "[prénom], bienvenue sur la galerie des souvenirs" est dans le layout (header Clerk)
   });
 
   it('affiche la galerie (type .galerie, layout en CSS global)', async () => {

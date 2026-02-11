@@ -1,2 +1,2 @@
 —
-Aucune US en cours. US-5.5 validée.
+US-5.7 terminée. Aucune US en cours.

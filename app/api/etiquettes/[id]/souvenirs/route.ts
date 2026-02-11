@@ -1,42 +1,19 @@
-import { auth, currentUser } from '@clerk/nextjs/server';
+import { auth } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
-import { defaultEtiquetteRepository, isAdminEmail } from '@/utils';
-
-async function requireAdmin(): Promise<NextResponse | null> {
-  const { userId: clerkId } = await auth();
-  if (!clerkId) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
-  }
-  let email = '';
-  try {
-    const clerkUser = await currentUser();
-    const primary =
-      clerkUser?.emailAddresses?.find(
-        (e) => e.id === clerkUser.primaryEmailAddressId
-      ) ?? clerkUser?.emailAddresses?.[0];
-    email = primary?.emailAddress ?? '';
-  } catch {
-    // ignore
-  }
-  if (!isAdminEmail(email)) {
-    return NextResponse.json(
-      { error: "Réservé à l'administrateur" },
-      { status: 403 }
-    );
-  }
-  return null;
-}
+import { defaultEtiquetteRepository } from '@/utils';
 
 /**
  * GET /api/etiquettes/[id]/souvenirs?noms=nom1,nom2 — Pour une étiquette et une liste de noms,
- * retourne les noms de souvenirs qui ont déjà cette étiquette (pour panachage : Supprimer / Affecter à tout).
+ * retourne les noms de souvenirs qui ont déjà cette étiquette (filtre US-5.6 ou panachage admin).
  */
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const err = await requireAdmin();
-  if (err) return err;
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+  }
 
   const { id: idParam } = await params;
   const etiquetteId = parseInt(idParam, 10);

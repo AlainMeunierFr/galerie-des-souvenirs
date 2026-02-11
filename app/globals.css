@@ -17,7 +17,7 @@
   --galerie-figure-radius: 0.5rem;
   --galerie-figure-bg: #e5e5e5;
   --galerie-breakpoint: 768px;
-  /* Muuri zoom (taille des cartes) */
+  /* Galerie zoom (taille des cartes) */
   --galerie-item-size: 180px;
   /* Modal et action destructive (US-5.3) */
   --modal-overlay-bg: rgba(0, 0, 0, 0.5);
@@ -81,7 +81,7 @@ body {
   width: 100%;
 }
 
-/* Section qui contient Muuri : une seule colonne pleine largeur (BDD garde class grid-cols-4) */
+/* Section qui contient la grille galerie (BDD garde class grid-cols-4) */
 .galerie.grid-cols-4 {
   grid-template-columns: 1fr;
 }
@@ -166,8 +166,8 @@ body {
   cursor: not-allowed;
 }
 
-/* Texte visible quand la carte fait ≥380px, icône sinon (largeur depuis muuri-item) */
-.galerie-muuri .muuri-item-content {
+/* Texte visible quand la carte fait ≥380px, icône sinon (largeur depuis galerie-grid-item) */
+.galerie-grid .galerie-grid-item {
   container-type: inline-size;
   container-name: carte;
 }
@@ -199,59 +199,105 @@ body {
   opacity: 0.8;
 }
 
-/* Muuri — grille filtrable et zoom (US-5.2+) */
-.galerie-muuri {
-  position: relative;
+/* Grille galerie — filtrage par intérêt et zoom (US-5.2+), alignement horizontal strict */
+.galerie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--galerie-item-size), 1fr));
+  gap: var(--galerie-gap);
   width: 100%;
   min-height: 120px;
 }
 
 /* Zoom : réglé par JS (--galerie-item-size en px, 140 à 600) */
 
-.galerie-muuri .muuri-item {
-  position: absolute;
-  width: var(--galerie-item-size);
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  z-index: 1;
-}
-
-.galerie-muuri .muuri-item.muuri-item-dragging {
-  z-index: 3;
-}
-
-.galerie-muuri .muuri-item.muuri-item-releasing {
-  z-index: 2;
-}
-
-.galerie-muuri .muuri-item.muuri-item-hidden {
-  z-index: 0;
-  pointer-events: none;
-}
-
-.galerie-muuri .muuri-item-content {
-  width: calc(100% - var(--galerie-gap));
-  margin: calc(var(--galerie-gap) / 2);
-  margin-block: calc(var(--galerie-gap) / 4);
-}
-
-.galerie-muuri .muuri-item-content .galerie-carte {
+.galerie-grid .galerie-grid-item .galerie-carte {
   width: 100%;
 }
 
 .page-header-filtres {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.page-header-filtres-gauche {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 1.25rem;
 }
 
 .zone-etiquettes-anchor {
-  margin-left: auto;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0 1rem;
+  min-width: 0;
 }
 
-/* Filtre Intérêt — style pills (type démo Muuri) */
+/* Bloc visuel commun à chaque filtre (Intérêt, Étiquette, Zoom) */
+.filtre-pills,
+.galerie-zoom {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--foreground);
+  border-color: color-mix(in srgb, var(--foreground) 25%, transparent);
+  background: color-mix(in srgb, var(--foreground) 4%, var(--background));
+}
+
+/* Filtres Intérêt et Étiquette — options visibles, une seule sélection */
+.filtre-pills {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.filtre-pills-legend {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--foreground);
+  opacity: 0.85;
+  display: block;
+}
+
+.filtre-pills-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filtre-pills-option {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8125rem;
+  border-radius: 9999px;
+  border: 2px solid var(--foreground);
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.filtre-pills-option:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.filtre-pills-option--selected {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.filtre-pills-option--selected:hover {
+  opacity: 0.9;
+}
+
+/* Filtre Intérêt — style pills (legacy, conservé si réutilisation) */
 .filtreInteret {
   border: none;
   padding: 0;
@@ -306,16 +352,18 @@ body {
   color: var(--background);
 }
 
-/* Zoom — curseur de petit (plusieurs par ligne) à grand (1 par ligne) */
+/* Zoom — bloc à droite, même style de bloc que les filtres */
 .galerie-zoom {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
+  flex-shrink: 0;
 }
 
 .galerie-zoom-label {
-  font-size: 0.875rem;
-  min-width: 4rem;
+  font-size: 0.75rem;
+  min-width: 3rem;
+  opacity: 0.9;
 }
 
 .galerie-zoom input[type="range"] {
@@ -479,17 +527,19 @@ body {
   white-space: pre;
 }
 
-/* CA2 : Zone étiquettes (bouton + liste) — même ligne que les filtres, à droite */
+/* CA2 : Zone étiquettes — centré, petites boîtes avec crayon à l'intérieur */
 [data-testid="zone-etiquettes"] {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   padding: 0.25rem 0;
 }
 
 [data-testid="zone-etiquettes"] > button {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
   border-radius: 0.25rem;
   border: 1px solid var(--foreground);
   background: transparent;
@@ -505,7 +555,7 @@ body {
 }
 
 [data-testid="zone-etiquettes"] [aria-label="Liste des étiquettes"] {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -520,25 +570,51 @@ body {
   gap: 0.5rem;
 }
 
-[data-testid="zone-etiquettes"] [aria-label="Liste des étiquettes"] li button {
-  padding: 0.35rem 0.75rem;
-  font-size: 0.8rem;
+.etiquette-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
   border-radius: 9999px;
   border: 1px solid var(--foreground);
   background: transparent;
   color: var(--foreground);
+}
+
+.etiquette-chip > button:first-child {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  font: inherit;
+  transition: opacity 0.15s;
 }
 
-[data-testid="zone-etiquettes"] [aria-label="Liste des étiquettes"] li button:hover {
-  background: var(--foreground);
-  color: var(--background);
+.etiquette-chip > button:first-child:hover {
+  opacity: 0.8;
 }
 
-[data-testid="zone-etiquettes"] [data-testid^="etiquette-renommer-"] {
-  padding: 0.2rem 0.4rem;
-  font-size: 0.9rem;
+.etiquette-chip-rename {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.85em;
+  line-height: 1;
+  opacity: 0.85;
+  transition: opacity 0.15s;
+}
+
+.etiquette-chip-rename:hover {
+  opacity: 1;
+}
+
+[data-testid="zone-etiquettes"] [aria-label="Liste des étiquettes"] li {
+  list-style: none;
 }
 
 [data-testid="zone-etiquettes"] [aria-label="Liste des étiquettes"] span {

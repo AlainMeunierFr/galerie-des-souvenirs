@@ -1,29 +1,50 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 import type { InteretCle } from '@/utils';
 import { isAdminEmail } from '@/utils/isAdmin';
-import { getInteretOptions } from '@/utils/interetLabels';
+import { isEtiquetteAdminOnly } from '@/utils/filterSouvenirsByEtiquettes';
 import FiltreInteret from './FiltreInteret';
+import FiltreEtiquette from './FiltreEtiquette';
 import GalerieCartes from './GalerieCartes';
 
 type AccueilConnecteProps = {
   souvenirs: string[];
 };
 
-const TOUTES_LES_CLES: Set<InteretCle> = new Set(
-  getInteretOptions().map((o) => o.cle)
-);
-
 export default function AccueilConnecte({ souvenirs }: AccueilConnecteProps) {
   const { user } = useUser();
   const email = user?.primaryEmailAddress?.emailAddress ?? '';
   const isAdmin = isAdminEmail(email);
+  /** Filtre intérêt : un seul à la fois. Set vide = sans filtre (tout afficher). */
   const [selectedKeys, setSelectedKeys] = useState<Set<InteretCle>>(
-    () => new Set(TOUTES_LES_CLES)
+    () => new Set()
   );
   const [zoomPercent, setZoomPercent] = useState(50);
+  const [etiquettes, setEtiquettes] = useState<{ id: number; libelle: string }[]>([]);
+  /** Filtre étiquette : un seul à la fois. Set vide = tout afficher, Set d'un élément = filtrer par cet étiquette. */
+  const [selectedEtiquetteLibelles, setSelectedEtiquetteLibelles] = useState<Set<string>>(
+    () => new Set()
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/etiquettes')
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data: { id: number; libelle: string }[]) => {
+        if (!cancelled) {
+          const list = Array.isArray(data) ? data : [];
+          setEtiquettes(list);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setEtiquettes([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [isAdmin]);
 
   return (
     <main className="p-4">
@@ -32,11 +53,20 @@ export default function AccueilConnecte({ souvenirs }: AccueilConnecteProps) {
         data-layout="page-header-sticky"
         data-testid="page-header"
       >
-        <h1 className="text-left mb-4">
-          Bienvenue sur la galerie des souvenirs
-        </h1>
         <div className="page-header-filtres" data-testid="zone-filtres">
-          <FiltreInteret selectedKeys={selectedKeys} onChange={setSelectedKeys} />
+          <div className="page-header-filtres-gauche">
+            <FiltreInteret selectedKeys={selectedKeys} onChange={setSelectedKeys} />
+            <FiltreEtiquette
+              etiquettes={
+                isAdmin
+                  ? etiquettes
+                  : etiquettes.filter((e) => !isEtiquetteAdminOnly(e.libelle))
+              }
+              selectedLibelles={selectedEtiquetteLibelles}
+              onChange={setSelectedEtiquetteLibelles}
+            />
+          </div>
+          <div id="zone-etiquettes-anchor" className="zone-etiquettes-anchor" />
           <div className="galerie-zoom" role="group" aria-label="Taille des cartes">
             <span className="galerie-zoom-label" id="zoom-label">
               Petit
@@ -63,7 +93,6 @@ export default function AccueilConnecte({ souvenirs }: AccueilConnecteProps) {
               Grand
             </span>
           </div>
-          <div id="zone-etiquettes-anchor" className="zone-etiquettes-anchor" />
         </div>
       </header>
       <section
@@ -74,6 +103,7 @@ export default function AccueilConnecte({ souvenirs }: AccueilConnecteProps) {
         <GalerieCartes
           souvenirs={souvenirs}
           selectedFilterKeys={selectedKeys}
+          selectedEtiquetteLibelles={selectedEtiquetteLibelles}
           zoomPercent={zoomPercent}
           isAdmin={isAdmin}
         />

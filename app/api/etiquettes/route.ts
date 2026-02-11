@@ -5,11 +5,17 @@ import {
   isAdminEmail,
 } from '@/utils';
 
-async function requireAdmin(): Promise<NextResponse | null> {
-  const { userId: clerkId } = await auth();
-  if (!clerkId) {
+async function requireAuth(): Promise<NextResponse | null> {
+  const { userId } = await auth();
+  if (!userId) {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   }
+  return null;
+}
+
+async function requireAdmin(): Promise<NextResponse | null> {
+  const err = await requireAuth();
+  if (err) return err;
   let email = '';
   try {
     const clerkUser = await currentUser();
@@ -31,10 +37,10 @@ async function requireAdmin(): Promise<NextResponse | null> {
 }
 
 /**
- * GET /api/etiquettes — Liste toutes les étiquettes (admin).
+ * GET /api/etiquettes — Liste toutes les étiquettes (tout utilisateur connecté, pour filtre US-5.6).
  */
 export async function GET() {
-  const err = await requireAdmin();
+  const err = await requireAuth();
   if (err) return err;
 
   const repo = defaultEtiquetteRepository;

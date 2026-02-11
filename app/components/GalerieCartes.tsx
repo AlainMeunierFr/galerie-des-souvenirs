@@ -1,10 +1,14 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import type { InteretValeur } from '@/utils';
 import type { InteretCle } from '@/utils';
+import {
+  filterSouvenirsByEtiquettes,
+  isEtiquetteAdminOnly,
+} from '@/utils/filterSouvenirsByEtiquettes';
 import CarteSouvenir from './CarteSouvenir';
 
 const CLE_TO_VALEUR: Record<InteretCle, InteretValeur> = {
@@ -22,6 +26,7 @@ const ZOOM_MAX_PX = 600;
 type GalerieCartesProps = {
   souvenirs: string[];
   selectedFilterKeys?: Set<InteretCle>;
+  selectedEtiquetteLibelles?: Set<string>;
   zoomPercent?: number;
   isAdmin?: boolean;
 };
@@ -29,6 +34,7 @@ type GalerieCartesProps = {
 export default function GalerieCartes({
   souvenirs,
   selectedFilterKeys,
+  selectedEtiquetteLibelles,
   zoomPercent = 50,
   isAdmin = false,
 }: GalerieCartesProps) {
@@ -48,8 +54,6 @@ export default function GalerieCartes({
   const [modalRenameEtiquetteLibelle, setModalRenameEtiquetteLibelle] = useState('');
   const [modalRenameEtiquetteError, setModalRenameEtiquetteError] = useState<string | null>(null);
   const router = useRouter();
-  const gridRef = useRef<HTMLDivElement>(null);
-  const gridInstanceRef = useRef<{ filter: (pred: (item: unknown) => boolean) => void; refreshItems: () => void; layout: () => void; destroy: () => void } | null>(null);
 
   const fetchInterets = useCallback(async () => {
     try {
@@ -84,10 +88,8 @@ export default function GalerieCartes({
   }, []);
 
   useEffect(() => {
-    if (isAdmin) {
-      fetchEtiquettes();
-    }
-  }, [isAdmin, fetchEtiquettes]);
+    fetchEtiquettes();
+  }, [fetchEtiquettes]);
 
   const allNoms = useMemo(
     () => souvenirs.map((f) => f.replace(/\.(webp|heic|jpe?g)$/i, '')),
@@ -95,7 +97,7 @@ export default function GalerieCartes({
   );
 
   useEffect(() => {
-    if (!isAdmin || etiquettes.length === 0 || allNoms.length === 0) return;
+    if (etiquettes.length === 0 || allNoms.length === 0) return;
     let cancelled = false;
     const nomsParam = allNoms.map(encodeURIComponent).join(',');
     const next: Record<string, string[]> = {};
@@ -119,7 +121,7 @@ export default function GalerieCartes({
     return () => {
       cancelled = true;
     };
-  }, [isAdmin, etiquettes, allNoms]);
+  }, [etiquettes, allNoms]);
 
   const handleDelete = useCallback(
     async (nom: string) => {
@@ -361,7 +363,7 @@ export default function GalerieCartes({
 
   const selectedValeurs = useMemo(
     () =>
-      selectedFilterKeys
+      selectedFilterKeys && selectedFilterKeys.size > 0
         ? new Set(
             [...selectedFilterKeys].map((cle) => CLE_TO_VALEUR[cle])
           )
@@ -369,65 +371,45 @@ export default function GalerieCartes({
     [selectedFilterKeys]
   );
 
-  // Muuri: init grid on mount (import dynamique pour éviter "window is not defined" en SSR)
-  useEffect(() => {
-    const el = gridRef.current;
-    if (!el || souvenirs.length === 0) return;
-    let cancelled = false;
-    import('muuri').then(({ default: Muuri }) => {
-      if (cancelled || !gridRef.current) return;
-      const grid = new Muuri(gridRef.current, {
-        items: '.muuri-item',
-        layout: { fillGaps: true },
-        layoutOnInit: true,
-        layoutDuration: 280,
-        showDuration: 200,
-        hideDuration: 200,
-        itemVisibleClass: 'muuri-item-shown',
-        itemHiddenClass: 'muuri-item-hidden',
+  const visibleSouvenirs = useMemo(() => {
+    let byInteret = souvenirs;
+    if (selectedValeurs !== null) {
+      byInteret = souvenirs.filter((filename) => {
+        const nom = filename.replace(/\.(webp|heic|jpe?g)$/i, '');
+        const interet: InteretValeur = interets[nom] ?? null;
+        return selectedValeurs.has(interet);
       });
-      if (!cancelled) gridInstanceRef.current = grid;
-      else grid.destroy();
+    }
+    if (
+      !selectedEtiquetteLibelles ||
+      selectedEtiquetteLibelles.size !== 1
+    ) {
+      return byInteret;
+    }
+    const noms = byInteret.map((f) => f.replace(/\.(webp|heic|jpe?g)$/i, ''));
+    const avecEtiquettes = noms.map((nom) => {
+      const raw = etiquettesParSouvenir[nom] ?? [];
+      const etiquettes =
+        isAdmin ? raw : raw.filter((l) => !isEtiquetteAdminOnly(l));
+      return { nom, etiquettes };
     });
-    return () => {
-      cancelled = true;
-      if (gridInstanceRef.current) {
-        gridInstanceRef.current.destroy();
-        gridInstanceRef.current = null;
-      }
-    };
-  }, [souvenirs.length]);
-
-  // Muuri: filter when selectedValeurs or interets change
-  useEffect(() => {
-    const grid = gridInstanceRef.current;
-    if (!grid || selectedValeurs === null) return;
-    grid.filter((item: unknown) => {
-      const el = (item as { getElement(): HTMLElement | null }).getElement();
-      const raw = el?.getAttribute('data-interet');
-      const interet: InteretValeur = raw === 'null' ? null : (raw as 'oui' | 'non');
-      return selectedValeurs.has(interet);
+    const filtered = filterSouvenirsByEtiquettes(
+      avecEtiquettes,
+      [...selectedEtiquetteLibelles]
+    );
+    const filteredNoms = new Set(filtered.map((s) => s.nom));
+    return byInteret.filter((filename) => {
+      const nom = filename.replace(/\.(webp|heic|jpe?g)$/i, '');
+      return filteredNoms.has(nom);
     });
-  }, [selectedValeurs, interets]);
-
-  // Muuri: refresh layout when zoom level changes
-  useEffect(() => {
-    const grid = gridInstanceRef.current;
-    if (!grid) return;
-    grid.refreshItems();
-    grid.layout();
-  }, [zoomPercent]);
-
-  // Muuri: redessiner la grille après ajout/suppression d'étiquettes (contenu des cartes change)
-  useEffect(() => {
-    const grid = gridInstanceRef.current;
-    if (!grid) return;
-    const id = requestAnimationFrame(() => {
-      grid.refreshItems();
-      grid.layout();
-    });
-    return () => cancelAnimationFrame(id);
-  }, [etiquettesParSouvenir]);
+  }, [
+    souvenirs,
+    selectedValeurs,
+    interets,
+    selectedEtiquetteLibelles,
+    etiquettesParSouvenir,
+    isAdmin,
+  ]);
 
   const itemSizePx = Math.round(
     ZOOM_MIN_PX + (zoomPercent / 100) * (ZOOM_MAX_PX - ZOOM_MIN_PX)
@@ -439,29 +421,39 @@ export default function GalerieCartes({
         <button type="button" onClick={openModalEtiquette}>
           Ajouter étiquette
         </button>
+        <button
+          type="button"
+          onClick={() => setSelectedNoms(new Set())}
+          data-testid="bouton-tout-deselectionner"
+        >
+          Tout déselectionner
+        </button>
         <div aria-label="Liste des étiquettes">
           {etiquettes.length === 0 ? (
             <span>Aucune étiquette</span>
           ) : (
             <ul>
               {etiquettes.map((e) => (
-                <li key={e.id} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                  <button
-                    type="button"
-                    onClick={() => handleClickEtiquette(e.id)}
-                    title="Affecter ou désaffecter aux souvenirs cochés"
-                  >
-                    {e.libelle}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => openModalRenameEtiquette(e.id, e.libelle)}
-                    title="Renommer l'étiquette"
-                    aria-label={`Renommer ${e.libelle}`}
-                    data-testid={`etiquette-renommer-${e.id}`}
-                  >
-                    ✎
-                  </button>
+                <li key={e.id}>
+                  <div className="etiquette-chip">
+                    <button
+                      type="button"
+                      onClick={() => handleClickEtiquette(e.id)}
+                      title="Affecter ou désaffecter aux souvenirs cochés"
+                    >
+                      {e.libelle}
+                    </button>
+                    <button
+                      type="button"
+                      className="etiquette-chip-rename"
+                      onClick={() => openModalRenameEtiquette(e.id, e.libelle)}
+                      title="Renommer l'étiquette"
+                      aria-label={`Renommer ${e.libelle}`}
+                      data-testid={`etiquette-renommer-${e.id}`}
+                    >
+                      ✎
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -480,11 +472,10 @@ export default function GalerieCartes({
     {anchor && zoneEtiquettesContent &&
       createPortal(zoneEtiquettesContent, anchor)}
     <div
-      ref={gridRef}
-      className="galerie-muuri"
+      className="galerie-grid"
       style={{ '--galerie-item-size': `${itemSizePx}px` } as React.CSSProperties}
     >
-      {souvenirs.map((filename) => {
+      {visibleSouvenirs.map((filename) => {
         const nom = filename.replace(/\.(webp|heic|jpe?g)$/i, '');
         const interetValue: InteretValeur = interets[nom] ?? null;
         const dataInteret =
@@ -492,22 +483,26 @@ export default function GalerieCartes({
         return (
           <div
             key={filename}
-            className="muuri-item"
+            className="galerie-grid-item"
             data-interet={dataInteret}
           >
-            <div className="muuri-item-content">
-              <CarteSouvenir
-                filename={filename}
-                interet={interetValue}
-                onInteretChange={handleInteretChange}
-                disabled={loading || pending.has(nom)}
-                isAdmin={isAdmin}
-                onDelete={isAdmin ? () => handleDelete(nom) : undefined}
-                selected={isAdmin ? selectedNoms.has(nom) : false}
-                onSelectionChange={isAdmin ? handleSelectionChange : undefined}
-                etiquettesSurCarte={etiquettesParSouvenir[nom] ?? []}
-              />
-            </div>
+            <CarteSouvenir
+              filename={filename}
+              interet={interetValue}
+              onInteretChange={handleInteretChange}
+              disabled={loading || pending.has(nom)}
+              isAdmin={isAdmin}
+              onDelete={isAdmin ? () => handleDelete(nom) : undefined}
+              selected={isAdmin ? selectedNoms.has(nom) : false}
+              onSelectionChange={isAdmin ? handleSelectionChange : undefined}
+              etiquettesSurCarte={
+                isAdmin
+                  ? (etiquettesParSouvenir[nom] ?? [])
+                  : (etiquettesParSouvenir[nom] ?? []).filter(
+                      (l) => !isEtiquetteAdminOnly(l)
+                    )
+              }
+            />
           </div>
         );
       })}

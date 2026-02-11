@@ -13,7 +13,12 @@ Then('la page contient {string}', async ({ page }, text: string) => {
 });
 
 Then('la page contient un titre H1 avec le texte {string}', async ({ page }, text: string) => {
-  await page.getByRole('heading', { level: 1, name: text }).waitFor({ state: 'visible' });
+  const h1 = page.getByRole('heading', { level: 1 });
+  await h1.waitFor({ state: 'visible' });
+  const content = await h1.textContent();
+  if (!content?.includes(text)) {
+    throw new Error(`H1 ne contient pas "${text}". Contenu: "${content}"`);
+  }
 });
 
 Given('la largeur du viewport est {int}px', async ({ page }, width: number) => {

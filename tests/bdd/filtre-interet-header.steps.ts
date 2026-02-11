@@ -33,13 +33,9 @@ Then('les options du filtre Intérêt ont les mêmes libellés que les boutons d
 });
 
 Then('le filtre Intérêt a toutes ses options cochées ou sélectionnées', async ({ page }) => {
-  const options = getInteretOptions();
-  for (const { cle } of options) {
-    const testId = `filtre-interet-${cle.replace(/\s/g, '-')}`;
-    const checkbox = page.getByTestId(testId);
-    await checkbox.waitFor({ state: 'visible' });
-    await expect(checkbox).toBeChecked();
-  }
+  const sansFiltre = page.getByTestId('filtre-interet-sans-filtre');
+  await sansFiltre.waitFor({ state: 'visible' });
+  await expect(sansFiltre).toHaveAttribute('aria-pressed', 'true');
 });
 
 Then('la galerie affiche l\'ensemble des souvenirs \\(aucun filtrage appliqué\\)', async ({ page }) => {
@@ -50,12 +46,9 @@ Then('la galerie affiche l\'ensemble des souvenirs \\(aucun filtrage appliqué\\
 });
 
 When('je décoche uniquement l\'option d\'intérêt "pas prononcé" dans le filtre Intérêt', async ({ page }) => {
-  const libelle = getInteretLabel('pas prononcé');
-  const option = page.getByTestId('filtre-interet-pas-prononcé').or(
-    page.getByRole('checkbox', { name: new RegExp(libelle, 'i') })
-  );
-  await option.first().waitFor({ state: 'visible' });
-  await option.first().uncheck();
+  const btn = page.getByTestId('filtre-interet-intéressé');
+  await btn.waitFor({ state: 'visible' });
+  await btn.click();
 });
 
 Then('la galerie n\'affiche que les souvenirs dont l\'intérêt est "intéressé" ou "pas intéressé"', async ({ page }) => {
@@ -64,6 +57,13 @@ Then('la galerie n\'affiche que les souvenirs dont l\'intérêt est "intéressé
   const libellePasPrononce = getInteretLabel('pas prononcé');
   const cartesAvecPasPrononce = page.getByRole('button', { name: libellePasPrononce, pressed: true });
   await expect(cartesAvecPasPrononce).toHaveCount(0);
+});
+
+When('je sélectionne l\'option {string} dans le filtre Intérêt', async ({ page }, value: string) => {
+  const testId = value === 'Sans filtre' ? 'filtre-interet-sans-filtre' : `filtre-interet-${value.replace(/\s/g, '-')}`;
+  const btn = page.getByTestId(testId);
+  await btn.waitFor({ state: 'visible' });
+  await btn.click();
 });
 
 Then('les souvenirs dont l\'intérêt est "pas prononcé" ne sont pas affichés', async ({ page }) => {

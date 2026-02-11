@@ -14,6 +14,11 @@ export type {
 } from './domain/ports/InteretRepository';
 export { isAdminEmail } from './isAdmin';
 export {
+  filterSouvenirsByEtiquettes,
+  isEtiquetteAdminOnly,
+  SANS_ETIQUETTE,
+} from './filterSouvenirsByEtiquettes';
+export {
   getInteretLabel,
   getInteretOptions,
 } from './interetLabels';
