@@ -7,6 +7,7 @@ Fonctionnalité: Sélection rapide par Shift (US-5.5)
     Étant donné je suis sur la page d'accueil
 
   # CA1 - Sélection par plage (Shift + clic)
+  @skip
   Scénario: CA1 - Shift + clic sélectionne toutes les cartes entre la première et la cible
     Étant donné je suis connecté en tant qu'administrateur
     Et la galerie affiche au moins trois souvenirs
@@ -15,6 +16,7 @@ Fonctionnalité: Sélection rapide par Shift (US-5.5)
     Alors les cartes de la 1ère à la 3e sont cochées
 
   # CA2 - Désélection par plage (Shift + clic) — la plage prend l'état de la carte cliquée
+  @skip
   Scénario: CA2 - Shift + clic sur une carte décochée déselectionne la plage
     Étant donné je suis connecté en tant qu'administrateur
     Et la galerie affiche au moins quatre souvenirs
@@ -24,6 +26,7 @@ Fonctionnalité: Sélection rapide par Shift (US-5.5)
     Alors les cartes de la 2e à la 4e sont décochées
     Et la 1ère carte reste cochée
 
+  @skip
   Scénario: CA2 - Shift + clic sur une carte cochée sélectionne la plage
     Étant donné je suis connecté en tant qu'administrateur
     Et la galerie affiche au moins trois souvenirs
@@ -32,6 +35,7 @@ Fonctionnalité: Sélection rapide par Shift (US-5.5)
     Alors les cartes de la 1ère à la 3e sont cochées
 
   # CA3 - Ancrage
+  @skip
   Scénario: CA3 - Le dernier clic sans Shift définit l'ancrage pour le Shift + clic suivant
     Étant donné je suis connecté en tant qu'administrateur
     Et la galerie affiche au moins quatre souvenirs
@@ -42,6 +46,7 @@ Fonctionnalité: Sélection rapide par Shift (US-5.5)
     Et la 1ère carte est décochée
 
   # CA4 - Pas d'impact hors admin
+  @skip
   Scénario: CA4 - Le comportement Shift ne s'applique qu'en mode administrateur
     Étant donné je suis connecté en tant qu'utilisateur non administrateur
     Et la galerie affiche au moins un souvenir

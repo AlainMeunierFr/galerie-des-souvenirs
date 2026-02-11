@@ -1,9 +1,7 @@
 === Contrôle de typage (TypeScript) - ÉCHEC ===
 
 === stdout ===
-app/components/GalerieCartes.tsx(167,17): error TS2345: Argument of type '(item: { getElement(): HTMLElement | null; }) => boolean' is not assignable to parameter of type '(item: unknown) => boolean'.
-  Types of parameters 'item' and 'item' are incompatible.
-    Type 'unknown' is not assignable to type '{ getElement(): HTMLElement | null; }'.
+utils/index.ts(63,5): error TS2554: Expected 4 arguments, but got 0.
 
 === stderr ===
 

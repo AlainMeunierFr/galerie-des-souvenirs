@@ -1,5 +1,6 @@
 import { createBdd, test } from 'playwright-bdd';
 import { expect } from '@playwright/test';
+import { ensureModalEtiquetteClosed } from './helpers';
 
 const { When, Then } = createBdd(test);
 
@@ -31,6 +32,7 @@ Then('le bouton "Tout déselectionner" est dans la zone étiquettes à côté du
 
 // CA2 - Comportement au clic
 When('je clique sur le bouton "Tout déselectionner"', async ({ page }) => {
+  await ensureModalEtiquetteClosed(page);
   const btn = page.getByRole('button', { name: 'Tout déselectionner' }).or(
     page.getByTestId('bouton-tout-deselectionner')
   );

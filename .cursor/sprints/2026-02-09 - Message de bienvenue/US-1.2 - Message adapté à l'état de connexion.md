@@ -12,4 +12,4 @@
 - **CA1 - Visiteur non connecté** :
   - Sous le message de bienvenue (H1 actuel), après trois sauts de ligne, s'affiche un sous-titre H2 : « Connectez-vous ou créez-vous un compte utilisateur ».
 - **CA2 - Visiteur connecté** :
-  - Sous le message de bienvenue, après trois sauts de ligne, s'affiche le texte : « Voici les photos ».
+  - Sous le message de bienvenue, s'affiche la galerie de photos (voir US-2.1). Le texte « Voici les photos » a été remplacé par la galerie réelle.

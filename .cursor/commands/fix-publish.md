@@ -1,11 +1,11 @@
-## Erreur ESLint
+## Erreur TypeScript
 
-L'étape **ESLint** a échoué. Consulte le log ci-dessous pour identifier les problèmes.
+L'étape **Contrôle de typage** a échoué. Consulte le log ci-dessous.
 
-**Action** : Corriger les erreurs de lint signalées. Puis relancer `npm run publish`.
+**Action** : Corriger les erreurs de typage. Puis relancer `npm run publish`.
 
 ---
 
-**Log** : `logs/publish-eslint-errors.txt`
+**Log** : `logs/publish-typecheck-errors.txt`
 
 Pour analyser : utilise la commande `/analyse-erreurs` ou lis le fichier log.

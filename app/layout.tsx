@@ -41,7 +41,7 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Providers>
-            <header className="flex justify-between items-center p-4 gap-4 min-h-16 border-b">
+            <header className="sticky top-0 z-10 bg-background flex justify-between items-center p-4 gap-4 min-h-16 border-b">
               <SignedIn>
                 <WelcomeTitle />
               </SignedIn>

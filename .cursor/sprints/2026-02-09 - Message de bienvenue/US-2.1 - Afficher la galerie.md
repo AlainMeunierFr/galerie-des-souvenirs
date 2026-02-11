@@ -12,11 +12,11 @@
 - **CA1 - Page non connectée (inchangée)** :
   - La page affiche le titre H1 centré et le message « Connectez-vous ou créez-vous un compte utilisateur » (comportement actuel).
 - **CA2 - Page connectée : mise en page** :
-  - Le titre H1 « Bienvenue sur la galerie des souvenirs » est en haut à gauche, au-dessus de la barre horizontale Clerk.
+  - Le titre H1 (« Bienvenue sur la galerie des souvenirs » ou « [prénom], bienvenue sur la galerie des souvenirs » si prénom disponible) est en haut à gauche, au-dessus de la barre horizontale Clerk.
   - Le H1 n'est plus centré verticalement.
 - **CA3 - Page connectée : galerie** :
   - Le texte « Voici les photos » est remplacé par une galerie de photos.
   - La galerie est affichée sur 4 colonnes (ou équivalent selon le layout).
 - **CA4 - Réglage de la taille des cartes (zoom)** :
   - L'utilisateur connecté peut régler la taille d'affichage des cartes (ex. curseur Petit ↔ Grand) ; à « petit », plusieurs cartes par ligne ; à « grand », une carte par ligne ou moins de cartes par ligne.
-- **Note implémentation** : La grille peut utiliser un layout dynamique (ex. Muuri) pour le filtrage et le redimensionnement ; les CA ci-dessus décrivent le comportement attendu, pas la techno.
+- **Note implémentation** : La galerie est réalisée en grille CSS (alignement horizontal strict). Le filtrage et le zoom sont gérés par l’état de l’application ; les CA ci-dessus décrivent le comportement attendu.

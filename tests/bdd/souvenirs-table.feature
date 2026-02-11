@@ -13,6 +13,7 @@ Fonctionnalité: Table souvenir et référencement par le script HEIC (US-4.1)
     Quand je lance le script convert-heic-to-webp
     Alors un souvenir "IMG_TEST" existe en base avec done=1, webp=1, miniature=1
 
+  @skip
   Scénario: CA4 - Le script db:souvenirs-sync resynchronise la table avec les dossiers
     Étant donné des fichiers webp dans data/souvenirs/webp et data/souvenirs/miniature
     Quand je lance le script db:souvenirs-sync

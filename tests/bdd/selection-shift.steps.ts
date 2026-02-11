@@ -11,8 +11,9 @@ function ordinalToIndex(ordinal: number): number {
 Given('la galerie affiche au moins trois souvenirs', async ({ page }) => {
   const galerie = page.locator('[data-testid="galerie"]').or(page.locator('.galerie')).first();
   await galerie.waitFor({ state: 'visible' });
+  await page.waitForLoadState('networkidle');
   const cartes = page.locator('.galerie-carte');
-  await expect(cartes.nth(0)).toBeVisible();
+  await expect(cartes.nth(0)).toBeVisible({ timeout: 15000 });
   await expect(cartes.nth(1)).toBeVisible({ timeout: 5000 });
   await expect(cartes.nth(2)).toBeVisible({ timeout: 5000 });
 });
@@ -20,8 +21,9 @@ Given('la galerie affiche au moins trois souvenirs', async ({ page }) => {
 Given('la galerie affiche au moins quatre souvenirs', async ({ page }) => {
   const galerie = page.locator('[data-testid="galerie"]').or(page.locator('.galerie')).first();
   await galerie.waitFor({ state: 'visible' });
+  await page.waitForLoadState('networkidle');
   const cartes = page.locator('.galerie-carte');
-  await expect(cartes.nth(0)).toBeVisible();
+  await expect(cartes.nth(0)).toBeVisible({ timeout: 15000 });
   await expect(cartes.nth(1)).toBeVisible({ timeout: 5000 });
   await expect(cartes.nth(2)).toBeVisible({ timeout: 5000 });
   await expect(cartes.nth(3)).toBeVisible({ timeout: 5000 });

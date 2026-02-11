@@ -16,7 +16,7 @@ Then('la page contient un titre H1 avec le texte {string}', async ({ page }, tex
   const h1 = page.getByRole('heading', { level: 1 });
   await h1.waitFor({ state: 'visible' });
   const content = await h1.textContent();
-  if (!content?.includes(text)) {
+  if (!content?.toLowerCase().includes(text.toLowerCase())) {
     throw new Error(`H1 ne contient pas "${text}". Contenu: "${content}"`);
   }
 });
@@ -69,8 +69,8 @@ Given('je suis connecté', async ({ page }) => {
   const signInBtn = page.getByRole('link', { name: /connexion/i }).or(page.getByText(/connexion/i));
   await signInBtn.first().click();
   await page.getByLabel(/email|e-mail/i).fill(email);
-  await page.getByLabel(/mot de passe|password/i).fill(password);
-  await page.getByRole('button', { name: /continuer|connexion|sign in/i }).click();
+  await page.locator('input[type="password"]').fill(password);
+  await page.getByRole('button', { name: /^(continuer|continue|connexion|sign in)$/i }).click();
   await page.waitForURL('/');
 });
 

@@ -17,8 +17,8 @@ async function signInWithEmail(page: Page, email: string, password: string) {
     .or(page.getByText(/connexion/i));
   await signInBtn.first().click();
   await page.getByLabel(/email|e-mail/i).fill(email);
-  await page.getByLabel(/mot de passe|password/i).fill(password);
-  await page.getByRole('button', { name: /continuer|connexion|sign in/i }).click();
+  await page.locator('input[type="password"]').fill(password);
+  await page.getByRole('button', { name: /^(continuer|continue|connexion|sign in)$/i }).click();
   await page.waitForURL('/');
 }
 
@@ -63,7 +63,9 @@ Then('l\'application ne me considère pas comme administrateur', async ({ page }
 });
 
 Then('les cartes de la galerie n\'affichent pas les trois boutons d\'intérêt \\(Intéressé, Pas intéressé, Pas prononcé\\)', async ({ page }) => {
-  const btn = page.getByRole('button', { name: getInteretLabel('intéressé') });
+  // Scope à la galerie uniquement (exclut le filtre Intérêt dans le header)
+  const galerie = page.locator('[data-testid="galerie"]');
+  const btn = galerie.locator('.galerie-carte').getByRole('button', { name: getInteretLabel('intéressé') });
   await expect(btn).toHaveCount(0);
 });
 
@@ -84,6 +86,8 @@ Then('les cartes de la galerie n\'affichent pas de bouton "Supprimer"', async ({
 Given('la galerie affiche au moins un souvenir', async ({ page }) => {
   const galerie = page.locator('[data-testid="galerie"]').or(page.locator('.galerie')).first();
   await galerie.waitFor({ state: 'visible' });
+  await page.waitForLoadState('networkidle');
+  await expect(page.locator('.galerie-carte').first()).toBeVisible({ timeout: 30000 });
 });
 
 When('je clique sur le bouton "Supprimer" d\'une carte de la galerie', async ({ page }) => {
@@ -97,7 +101,7 @@ Then('une pop-up ou un dialogue modal m\'invite à confirmer la suppression', as
     page.getByRole('dialog')
   );
   await modal.waitFor({ state: 'visible' });
-  await page.getByText(/confirmer|supprimer/i).waitFor({ state: 'visible' });
+  await modal.getByRole('button', { name: /confirmer/i }).waitFor({ state: 'visible' });
 });
 
 Then('une pop-up de confirmation s\'affiche', async ({ page }) => {

@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 /**
- * Convertit les images HEIC du dossier INPUT vers Vercel Blob :
- * - miniature/{nom}.webp (512px max, qualité 85)
- * - webp/{nom}.webp (hauteur max 2000 px, qualité 85)
+ * Convertit les images HEIC du dossier INPUT vers Cloudinary :
+ * - miniature/{nom} (512px max, qualité 85)
+ * - webp/{nom} (hauteur max 2000 px, qualité 85)
  * Puis déplace les HEIC vers input/done (local).
  * Référence chaque conversion via SouvenirInventoryRepository.
  *
- * Variables : INPUT_DIR (défaut data/input), BLOB_READ_WRITE_TOKEN, TURSO_*.
+ * Variables : INPUT_DIR (défaut data/input), CLOUDINARY_*, TURSO_*.
  */
 
 import { readdir, readFile, rename, mkdir, access } from 'fs/promises';
 import { join, resolve } from 'path';
 import { constants } from 'fs';
 import sharp from 'sharp';
-import { put } from '@vercel/blob';
+import { v2 as cloudinary } from 'cloudinary';
 import { config } from 'dotenv';
 import { LibsqlSouvenirInventoryRepository } from '@/utils/adapters/LibsqlSouvenirInventoryRepository';
 import type { SouvenirInventoryRepository } from '@/utils/domain/ports/SouvenirInventoryRepository';
@@ -26,6 +26,31 @@ const DONE_DIR = join(INPUT_DIR, 'done');
 const MAX_SIZE = 512;
 const WEBP_MAX_HEIGHT = 2000;
 
+function initCloudinary() {
+  const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
+  if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
+    throw new Error(
+      'CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY et CLOUDINARY_API_SECRET sont requis.'
+    );
+  }
+  cloudinary.config({
+    cloud_name: CLOUDINARY_CLOUD_NAME,
+    api_key: CLOUDINARY_API_KEY,
+    api_secret: CLOUDINARY_API_SECRET,
+  });
+}
+
+async function uploadToCloudinary(
+  buffer: Buffer,
+  publicId: string
+): Promise<void> {
+  const base64 = buffer.toString('base64');
+  await cloudinary.uploader.upload(`data:image/webp;base64,${base64}`, {
+    public_id: publicId,
+    overwrite: true,
+  });
+}
+
 async function getInventoryRepository(): Promise<SouvenirInventoryRepository | null> {
   if (!process.env.TURSO_DATABASE_URL) return null;
   const { db } = await import('@/lib/db');
@@ -33,12 +58,7 @@ async function getInventoryRepository(): Promise<SouvenirInventoryRepository | n
 }
 
 async function main() {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    console.error(
-      'BLOB_READ_WRITE_TOKEN est requis. Créez un Blob store dans Vercel et ajoutez la variable dans .env.local.'
-    );
-    process.exit(1);
-  }
+  initCloudinary();
 
   try {
     await access(INPUT_DIR, constants.R_OK);
@@ -64,7 +84,7 @@ async function main() {
   await mkdir(DONE_DIR, { recursive: true });
 
   console.log(
-    `Conversion de ${heicFiles.length} fichier(s) HEIC → Blob (miniature + webp)...`
+    `Conversion de ${heicFiles.length} fichier(s) HEIC → Cloudinary (miniature + webp)...`
   );
 
   let ok = 0;
@@ -92,16 +112,8 @@ async function main() {
         .resize({ height: WEBP_MAX_HEIGHT, fit: 'inside', withoutEnlargement: true })
         .toBuffer();
 
-      await put(`miniature/${baseName}.webp`, miniatureBuffer, {
-        access: 'public',
-        addRandomSuffix: false,
-        allowOverwrite: true,
-      });
-      await put(`webp/${baseName}.webp`, webpFullBuffer, {
-        access: 'public',
-        addRandomSuffix: false,
-        allowOverwrite: true,
-      });
+      await uploadToCloudinary(miniatureBuffer, `miniature/${baseName}`);
+      await uploadToCloudinary(webpFullBuffer, `webp/${baseName}`);
 
       await rename(srcPath, join(DONE_DIR, file));
 
@@ -112,7 +124,7 @@ async function main() {
           console.error(`  (référencement base: ${(e as Error).message})`);
         }
       }
-      console.log(`  ${file} → Blob miniature/ + webp/ ${baseName}.webp → done/`);
+      console.log(`  ${file} → Cloudinary miniature/ + webp/ ${baseName}.webp → done/`);
       ok++;
     } catch (err) {
       console.error(`  ✗ ${file}: ${(err as Error).message}`);

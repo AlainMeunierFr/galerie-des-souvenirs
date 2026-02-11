@@ -67,10 +67,23 @@ L'étape **Tests d'intégration (Jest)** a échoué. Consulte le log ci-dessous.
 **Action** : Corriger les tests ou le code pour faire passer les TI. Puis relancer \`npm run publish\`.`,
   },
   {
+    id: 'db-sync',
+    name: 'Sync souvenirs (db:souvenirs-sync)',
+    cmd: 'npm',
+    args: ['run', 'db:souvenirs-sync'],
+    spawnEnv: { SYNC_FROM_LOCAL: '1' },
+    prompt: `## Erreur db:souvenirs-sync
+
+L'étape **Sync souvenirs** a échoué. La galerie risque d'être vide pour les tests BDD.
+
+**Action** : Vérifier TURSO_DATABASE_URL, TURSO_AUTH_TOKEN et les dossiers data/souvenirs, data/input. Puis relancer \`npm run publish\`.`,
+  },
+  {
     id: 'bdd',
     name: 'BDD (playwright-bdd)',
     cmd: 'npm',
     args: ['run', 'test:bdd'],
+    spawnEnv: { SOUVENIR_REPO: 'filesystem' },
     prompt: `## Erreur BDD
 
 L'étape **BDD (scénarios Gherkin)** a échoué. Consulte le log ci-dessous.

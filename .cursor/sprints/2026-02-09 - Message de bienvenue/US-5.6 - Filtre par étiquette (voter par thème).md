@@ -13,22 +13,16 @@
 **Critères d'acceptation**
 
 - **CA1 - Contrôle filtre par étiquette** :
-  - Un filtre « Étiquette » est proposé dans le header (à côté du filtre Intérêt), sous forme de contrôle à multi-sélection (ex. cases à cocher ou liste déroulante).
-  - Les options affichées correspondent à toutes les étiquettes existantes en base (créées via US-5.4).
-  - Une option « Sans étiquette » permet d'inclure les souvenirs n'ayant aucune étiquette.
+  - Un filtre « Étiquette » est proposé dans le header (à côté du filtre Intérêt), sous forme de contrôle à **choix unique** (une seule option à la fois).
+  - La première option est « Sans filtre » (aucun filtrage). Les options affichées correspondent aux étiquettes existantes en base (créées via US-5.4), **à l'exclusion des étiquettes réservées à l'admin** (libellé commençant par `*`, visibles uniquement pour l'administrateur).
+  - Une option « Sans étiquette » permet de n'afficher que les souvenirs n'ayant aucune étiquette.
 
-- **CA2 - Logique du filtre** :
-  - Les options cochées sont combinées par **OU** : la galerie affiche les souvenirs qui ont **au moins une** des étiquettes cochées, ou qui sont « Sans étiquette » si cette option est cochée.
-  - Si une étiquette est cochée et « Sans étiquette » aussi : afficher les souvenirs qui ont cette étiquette OU qui n'ont aucune étiquette.
+- **CA2 - Logique du filtre** : Une seule option peut être sélectionnée. Si « Sans filtre » est sélectionné, toute la galerie est visible (sous réserve du filtre Intérêt). Si une étiquette (ou « Sans étiquette ») est sélectionnée, la galerie n'affiche que les souvenirs ayant cette étiquette, ou sans étiquette si « Sans étiquette » est choisi.
 
-- **CA3 - État initial** :
-  - Par défaut, toutes les options sont cochées (aucun filtrage appliqué, toute la galerie visible).
+- **CA3 - État initial** : Par défaut, « Sans filtre » est sélectionné (aucun filtrage par étiquette, toute la galerie visible).
 
-- **CA4 - Cohérence avec le header** :
-  - Le filtre Étiquette s'intègre dans le header fixe existant (US-5.2), sans le modifier structurellement.
+- **CA4 - Cohérence avec le header** : Le filtre Étiquette s'intègre dans le header fixe existant (US-5.2).
 
 ---
 
-**Note** : Cette US concrétise le filtre par étiquette annoncé en US-5.4 (« recherche dans une US ultérieure »). L'utilisateur normal vote via les boutons d'intérêt ; l'administrateur peut filtrer pour gérer un sous-ensemble thématique.
-
-**⚠️ Attention technique** : Un autre agent est en train de supprimer toute dépendance à Muuri. Pour la partie front-end (TDD-front-end, Designer), faire attention à la structure DOM/CSS de la galerie et des filtres — ou envisager d'attendre la fin du nettoyage avant d'implémenter.
+**Note** : Les étiquettes dont le libellé commence par `*` ne sont affichées ni sur les cartes ni dans le filtre pour les utilisateurs non administrateurs (comportement implémenté en dehors de cette US).

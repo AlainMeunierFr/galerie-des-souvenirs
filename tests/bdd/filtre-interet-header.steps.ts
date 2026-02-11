@@ -18,6 +18,14 @@ Then('ce filtre propose les trois options d\'intérêt \\(concepts : intéressé
   }
 });
 
+Then('ce filtre propose l\'option {string} et les trois options d\'intérêt \\(concepts : intéressé, pas intéressé, pas prononcé\\)', async ({ page }, option: string) => {
+  await page.getByTestId(option === 'Sans filtre' ? 'filtre-interet-sans-filtre' : `filtre-interet-${option.replace(/\s/g, '-')}`).waitFor({ state: 'visible' });
+  const options = getInteretOptions();
+  for (const { libelle } of options) {
+    await page.getByText(libelle, { exact: true }).first().waitFor({ state: 'visible' });
+  }
+});
+
 Then('les options du filtre Intérêt ont les mêmes libellés que les boutons d\'intérêt sur les cartes', async ({ page }) => {
   const options = getInteretOptions();
   const filtre = page.getByTestId('filtre-interet');
@@ -38,11 +46,22 @@ Then('le filtre Intérêt a toutes ses options cochées ou sélectionnées', asy
   await expect(sansFiltre).toHaveAttribute('aria-pressed', 'true');
 });
 
+Then('le filtre Intérêt a {string} sélectionné', async ({ page }, option: string) => {
+  const testId =
+    option === 'Sans filtre'
+      ? 'filtre-interet-sans-filtre'
+      : `filtre-interet-${option.replace(/\s/g, '-')}`;
+  const btn = page.getByTestId(testId);
+  await btn.waitFor({ state: 'visible', timeout: 15000 });
+  await expect(btn).toHaveAttribute('aria-pressed', 'true');
+});
+
 Then('la galerie affiche l\'ensemble des souvenirs \\(aucun filtrage appliqué\\)', async ({ page }) => {
   const galerie = page.getByTestId('galerie').or(page.locator('.galerie'));
   await galerie.waitFor({ state: 'visible' });
-  const cartes = page.locator('.galerie-carte, [data-testid^="interet-"]').first();
-  await cartes.waitFor({ state: 'visible' }).catch(() => {});
+  await page.waitForLoadState('networkidle');
+  const cartes = page.locator('.galerie-carte').first();
+  await expect(cartes).toBeVisible({ timeout: 30000 });
 });
 
 When('je décoche uniquement l\'option d\'intérêt "pas prononcé" dans le filtre Intérêt', async ({ page }) => {
@@ -57,6 +76,15 @@ Then('la galerie n\'affiche que les souvenirs dont l\'intérêt est "intéressé
   const libellePasPrononce = getInteretLabel('pas prononcé');
   const cartesAvecPasPrononce = page.getByRole('button', { name: libellePasPrononce, pressed: true });
   await expect(cartesAvecPasPrononce).toHaveCount(0);
+});
+
+Then('la galerie n\'affiche que les souvenirs dont l\'intérêt est {string}', async ({ page }, interestKey: string) => {
+  const galerie = page.getByTestId('galerie').or(page.locator('.galerie'));
+  await galerie.waitFor({ state: 'visible' });
+  const libelle = getInteretLabel(interestKey as 'intéressé' | 'pas intéressé' | 'pas prononcé');
+  const cartes = galerie.locator('.galerie-grid-item');
+  const pressed = galerie.getByRole('button', { name: libelle, pressed: true });
+  await expect(cartes).toHaveCount(await pressed.count());
 });
 
 When('je sélectionne l\'option {string} dans le filtre Intérêt', async ({ page }, value: string) => {

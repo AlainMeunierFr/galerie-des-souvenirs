@@ -1,7 +1,23 @@
 import { createBdd, test } from 'playwright-bdd';
 import { expect } from '@playwright/test';
+import { ensureModalEtiquetteClosed } from './helpers';
 
 const { Given, When, Then } = createBdd(test);
+
+const ETIQUETTE_POUR_LES_TESTS = 'pour les tests';
+
+/** Supprime "pour les tests" via l'API si elle existe (ne touche pas aux données de prod). */
+async function supprimerEtiquettePourLesTestsSiExistante(
+  request: { get: (url: string) => Promise<{ json: () => Promise<unknown> }>; delete: (url: string) => Promise<unknown> }
+): Promise<void> {
+  const res = await request.get('/api/etiquettes');
+  const etiquettes = (await res.json()) as { id: number; libelle: string }[];
+  const trouvée = etiquettes.find((e) => e.libelle === ETIQUETTE_POUR_LES_TESTS);
+  if (trouvée) {
+    await request.delete(`/api/etiquettes/${trouvée.id}`);
+    await new Promise((r) => setTimeout(r, 500));
+  }
+}
 
 // CA1 - Cases à cocher
 Then('chaque carte de la galerie affiche une case à cocher dans le coin supérieur gauche sur l\'image', async ({ page }) => {
@@ -29,6 +45,7 @@ Then('le bouton "Ajouter étiquette" n\'est pas visible', async ({ page }) => {
 });
 
 When('je coche la case à cocher d\'une carte de la galerie', async ({ page }) => {
+  await ensureModalEtiquetteClosed(page);
   const checkbox = page.locator('.galerie-carte').getByRole('checkbox').first();
   await checkbox.waitFor({ state: 'visible', timeout: 5000 });
   await checkbox.check();
@@ -48,12 +65,14 @@ Then('la zone affiche la liste des étiquettes existantes ou un emplacement pour
 Given('la galerie affiche au moins deux souvenirs', async ({ page }) => {
   const galerie = page.locator('[data-testid="galerie"]').or(page.locator('.galerie')).first();
   await galerie.waitFor({ state: 'visible' });
+  await page.waitForLoadState('networkidle');
   const cartes = page.locator('.galerie-carte');
-  await expect(cartes.first()).toBeVisible();
-  await expect(cartes.nth(1)).toBeVisible({ timeout: 5000 });
+  await expect(cartes.first()).toBeVisible({ timeout: 30000 });
+  await expect(cartes.nth(1)).toBeVisible({ timeout: 10000 });
 });
 
 When('je coche la case à cocher de ces deux cartes', async ({ page }) => {
+  await ensureModalEtiquetteClosed(page);
   const checkboxes = page.locator('.galerie-carte').getByRole('checkbox');
   await checkboxes.nth(0).waitFor({ state: 'visible', timeout: 5000 });
   await checkboxes.nth(0).check();
@@ -62,6 +81,7 @@ When('je coche la case à cocher de ces deux cartes', async ({ page }) => {
 
 // CA3 - Pop-up création
 When('je clique sur le bouton "Ajouter étiquette"', async ({ page }) => {
+  await ensureModalEtiquetteClosed(page);
   await page.getByRole('button', { name: 'Ajouter étiquette' }).click();
 });
 
@@ -85,28 +105,86 @@ Then('la pop-up contient un bouton "Créer"', async ({ page }) => {
   await expect(page.getByRole('dialog').getByRole('button', { name: 'Créer' })).toBeVisible();
 });
 
-Given('l\'étiquette {string} n\'existe pas encore', async () => {
-  // État préparé : on suppose que l'étiquette n'existe pas encore (ou la liste ne l'affiche pas).
+Then('la pop-up contient un bouton "Modifier"', async ({ page }) => {
+  await expect(page.getByRole('dialog').getByRole('button', { name: 'Modifier' })).toBeVisible();
 });
 
-Given('l\'étiquette {string} existe', async () => {
-  // État préparé : l'étiquette existe (créée précédemment ou en base).
+Given('l\'étiquette {string} n\'existe pas encore', async ({ page }, libelle: string) => {
+  if (libelle !== ETIQUETTE_POUR_LES_TESTS) return;
+  await supprimerEtiquettePourLesTestsSiExistante(page.request);
 });
 
-Given('l\'étiquette {string} existe déjà', async () => {
-  // État préparé : l'étiquette existe (créée précédemment ou en base).
+Given('l\'étiquette {string} existe', async ({ page }, libelle: string) => {
+  if (libelle !== ETIQUETTE_POUR_LES_TESTS) return;
+  await page.locator('.galerie-carte').getByRole('checkbox').first().check();
+  await page.getByRole('button', { name: 'Ajouter étiquette' }).click();
+  await page.getByRole('dialog').getByLabel(/libellé|étiquette|nom/i).first().fill(libelle);
+  await page.getByRole('dialog').getByRole('button', { name: 'Créer' }).click();
+  await page.waitForLoadState('networkidle');
+  const hidden = await page.getByTestId('modal-etiquette').waitFor({ state: 'hidden', timeout: 5000 }).then(() => true).catch(() => false);
+  if (!hidden) await ensureModalEtiquetteClosed(page);
 });
 
-Given('l\'étiquette {string} existe et n\'est affectée à aucun des souvenirs visibles', async () => {
-  // État préparé pour le scénario.
+Given('l\'étiquette {string} existe déjà', async ({ page }, libelle: string) => {
+  if (libelle !== ETIQUETTE_POUR_LES_TESTS) return;
+  await page.locator('.galerie-carte').getByRole('checkbox').first().check();
+  await page.getByRole('button', { name: 'Ajouter étiquette' }).click();
+  await page.getByRole('dialog').getByLabel(/libellé|étiquette|nom/i).first().fill(libelle);
+  await page.getByRole('dialog').getByRole('button', { name: 'Créer' }).click();
+  await page.waitForLoadState('networkidle');
+  const modal = page.getByTestId('modal-etiquette');
+  const hidden = await modal.waitFor({ state: 'hidden', timeout: 3000 }).then(() => true).catch(() => false);
+  if (!hidden) {
+    await ensureModalEtiquetteClosed(page);
+    await supprimerEtiquettePourLesTestsSiExistante(page.request);
+    await page.locator('.galerie-carte').getByRole('checkbox').first().check();
+    await page.getByRole('button', { name: 'Ajouter étiquette' }).click();
+    await page.getByRole('dialog').getByLabel(/libellé|étiquette|nom/i).first().fill(libelle);
+    await page.getByRole('dialog').getByRole('button', { name: 'Créer' }).click();
+    await page.waitForLoadState('networkidle');
+    const h2 = await modal.waitFor({ state: 'hidden', timeout: 5000 }).then(() => true).catch(() => false);
+    if (!h2) await ensureModalEtiquetteClosed(page);
+  }
 });
 
-Given('l\'étiquette {string} existe et est déjà affectée aux souvenirs que je vais cocher', async () => {
-  // État préparé.
+Given('l\'étiquette {string} existe et n\'est affectée à aucun des souvenirs visibles', async ({ page }, libelle: string) => {
+  if (libelle !== ETIQUETTE_POUR_LES_TESTS) return;
+  await page.locator('.galerie-carte').getByRole('checkbox').first().check();
+  await page.getByRole('button', { name: 'Ajouter étiquette' }).click();
+  await page.getByRole('dialog').getByLabel(/libellé|étiquette|nom/i).first().fill(libelle);
+  await page.getByRole('dialog').getByRole('button', { name: 'Créer' }).click();
+  await page.waitForLoadState('networkidle');
+  const hidden = await page.getByTestId('modal-etiquette').waitFor({ state: 'hidden', timeout: 5000 }).then(() => true).catch(() => false);
+  if (!hidden) await ensureModalEtiquetteClosed(page);
+  await page.locator('.galerie-carte').getByRole('checkbox').first().uncheck();
 });
 
-Given('un des souvenirs a l\'étiquette {string} et l\'autre non', async () => {
-  // État préparé panachage.
+Given('l\'étiquette {string} existe et est déjà affectée aux souvenirs que je vais cocher', async ({ page }, libelle: string) => {
+  if (libelle !== ETIQUETTE_POUR_LES_TESTS) return;
+  const checkboxes = page.locator('.galerie-carte').getByRole('checkbox');
+  await checkboxes.nth(0).check();
+  await checkboxes.nth(1).check();
+  await page.getByRole('button', { name: 'Ajouter étiquette' }).click();
+  await page.getByRole('dialog').getByLabel(/libellé|étiquette|nom/i).first().fill(libelle);
+  await page.getByRole('dialog').getByRole('button', { name: 'Créer' }).click();
+  await page.waitForLoadState('networkidle');
+  const hidden = await page.getByTestId('modal-etiquette').waitFor({ state: 'hidden', timeout: 5000 }).then(() => true).catch(() => false);
+  if (!hidden) await ensureModalEtiquetteClosed(page);
+});
+
+Given('un des souvenirs a l\'étiquette {string} et l\'autre non', async ({ page }, libelle: string) => {
+  if (libelle !== ETIQUETTE_POUR_LES_TESTS) return;
+  await page.locator('.galerie-carte').getByRole('checkbox').first().check();
+  await page.getByRole('button', { name: 'Ajouter étiquette' }).click();
+  await page.getByRole('dialog').getByLabel(/libellé|étiquette|nom/i).first().fill(libelle);
+  await page.getByRole('dialog').getByRole('button', { name: 'Créer' }).click();
+  await page.waitForLoadState('networkidle');
+  const hidden = await page.getByTestId('modal-etiquette').waitFor({ state: 'hidden', timeout: 5000 }).then(() => true).catch(() => false);
+  if (!hidden) await ensureModalEtiquetteClosed(page);
+  await page.locator('.galerie-carte').getByRole('checkbox').first().uncheck();
+  await page.locator('.galerie-carte').getByRole('checkbox').nth(1).check();
+  await page.getByTestId('zone-etiquettes').getByRole('button', { name: libelle, exact: true }).click();
+  await page.waitForLoadState('networkidle');
 });
 
 When('je coche la case à cocher de deux cartes de la galerie', async ({ page }) => {
@@ -116,8 +194,9 @@ When('je coche la case à cocher de deux cartes de la galerie', async ({ page })
 });
 
 When('je coche la case à cocher des cartes qui ont l\'étiquette {string}', async ({ page }, _libelle: string) => {
-  // En E2E on peut cibler les cartes qui affichent l'étiquette (badge ou texte)
+  await ensureModalEtiquetteClosed(page);
   const cartesAvecEtiquette = page.locator('.galerie-carte').filter({ hasText: _libelle });
+  await expect(cartesAvecEtiquette.first()).toBeVisible({ timeout: 15000 });
   const first = cartesAvecEtiquette.first().getByRole('checkbox');
   await first.check();
   const count = await cartesAvecEtiquette.count();
@@ -148,7 +227,8 @@ Then('l\'étiquette {string} est affectée au souvenir coché', async ({ page },
 });
 
 Then('un message indique que l\'étiquette existe déjà ou que la création est refusée', async ({ page }) => {
-  await expect(page.getByText(/existe déjà|refusé|doublon/i).first()).toBeVisible({ timeout: 3000 });
+  const modal = page.getByRole('dialog').or(page.getByTestId('modal-etiquette'));
+  await expect(modal.getByText(/existe déjà|refusé|doublon/i)).toBeVisible({ timeout: 5000 });
 });
 
 Then('aucune nouvelle étiquette en doublon n\'est créée', async () => {
@@ -156,7 +236,9 @@ Then('aucune nouvelle étiquette en doublon n\'est créée', async () => {
 });
 
 When('je clique sur l\'étiquette {string} dans la liste des étiquettes', async ({ page }, libelle: string) => {
-  await page.getByRole('button', { name: libelle }).or(page.getByText(libelle).first()).click();
+  await ensureModalEtiquetteClosed(page);
+  const zone = page.getByTestId('zone-etiquettes');
+  await zone.getByRole('button', { name: libelle, exact: true }).click();
 });
 
 Then('l\'étiquette {string} est affectée à tous les souvenirs cochés', async ({ page }, libelle: string) => {
@@ -174,4 +256,46 @@ Then('une question ou un dialogue propose au moins les choix "Supprimer sur tout
   await expect(dialog.getByRole('button', { name: /supprimer sur tout/i })).toBeVisible();
   await expect(dialog.getByRole('button', { name: /affecter à tout/i })).toBeVisible();
   await expect(dialog.getByRole('button', { name: 'Annuler' })).toBeVisible();
+});
+
+// CA5 - Renommage d'étiquette
+When('je clique sur le bouton de renommage de l\'étiquette {string}', async ({ page }, libelle: string) => {
+  await ensureModalEtiquetteClosed(page);
+  const btn = page.getByTestId('zone-etiquettes').getByRole('button', { name: `Renommer ${libelle}` });
+  await btn.first().click();
+});
+
+Then('une pop-up ou un dialogue de renommage s\'affiche', async ({ page }) => {
+  const modal = page.getByTestId('modal-rename-etiquette').or(
+    page.getByRole('dialog').filter({ has: page.getByText(/renommer l'étiquette/i) })
+  );
+  await modal.waitFor({ state: 'visible' });
+});
+
+When('je modifie le libellé en {string} dans le modal de renommage', async ({ page }, nouveauLibelle: string) => {
+  const input = page.getByTestId('modal-rename-etiquette').getByRole('textbox').or(
+    page.getByLabel(/libellé/i).first()
+  );
+  await input.first().fill(nouveauLibelle);
+});
+
+When('je clique sur le bouton "Modifier" dans le modal de renommage', async ({ page }) => {
+  const btn = page.getByTestId('modal-rename-etiquette-modifier').or(
+    page.getByRole('dialog').getByRole('button', { name: 'Modifier' })
+  );
+  await btn.click();
+});
+
+Then('l\'étiquette est renommée en {string}', async ({ page }, nouveauLibelle: string) => {
+  await expect(page.getByText(nouveauLibelle).first()).toBeVisible({ timeout: 8000 });
+});
+
+When('je supprime l\'étiquette {string} pour remettre en place', async ({ page }, libelle: string) => {
+  if (libelle !== ETIQUETTE_POUR_LES_TESTS && libelle !== 'pour les tests 2024') return;
+  const res = await page.request.get('/api/etiquettes');
+  const etiquettes = (await res.json()) as { id: number; libelle: string }[];
+  const trouvée = etiquettes.find((e) => e.libelle === libelle);
+  if (trouvée) {
+    await page.request.delete(`/api/etiquettes/${trouvée.id}`);
+  }
 });

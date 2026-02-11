@@ -31,6 +31,12 @@
     - **Tous** les souvenirs cochés ont déjà cette étiquette → l'étiquette est **désaffectée** pour tous les souvenirs cochés.
     - **Panachage** (certains souvenirs cochés ont l'étiquette, d'autres non) → une question est posée avec trois choix : « Supprimer sur tout », « Affecter à tout », « Annuler ». L'action est exécutée selon le choix (désaffecter partout, affecter partout, ou ne rien faire).
 
+- **CA5 - Renommage d'étiquette** :
+  - Un bouton (icône crayon ✎) à côté de chaque étiquette dans la zone permet de la renommer.
+  - Un clic ouvre une pop-up « Renommer l'étiquette » avec : un champ de saisie (libellé), un bouton « Annuler », un bouton « Modifier ».
+  - Le bouton « Modifier » est désactivé (grisé) tant que le libellé n'a pas changé par rapport à l'étiquette existante.
+  - Si le libellé est modifié et l'utilisateur clique sur « Modifier », l'étiquette est renommée.
+
 ---
 
 **Note** : La recherche / filtre par étiquette pour « retrouver les images » fera l'objet d'une US dédiée ultérieure.

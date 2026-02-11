@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { VercelBlobSouvenirRepository } from '@/utils/adapters/VercelBlobSouvenirRepository';
+import { defaultSouvenirRepository } from '@/utils';
 import { getSouvenirBuffer } from '@/utils/use-cases/getSouvenirBuffer';
-
-const repo = new VercelBlobSouvenirRepository();
 
 /**
  * GET /api/souvenirs/[filename] — Sert les miniatures depuis Vercel Blob.
@@ -20,7 +18,7 @@ export async function GET(
   }
 
   try {
-    const buffer = await getSouvenirBuffer(repo, filename);
+    const buffer = await getSouvenirBuffer(defaultSouvenirRepository, filename);
     const contentType =
       filename.toLowerCase().endsWith('.webp') ? 'image/webp' : 'image/jpeg';
     return new NextResponse(new Uint8Array(buffer), {

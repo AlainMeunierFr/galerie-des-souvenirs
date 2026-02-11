@@ -28,6 +28,38 @@ async function requireAdmin(): Promise<NextResponse | null> {
 }
 
 /**
+ * DELETE /api/etiquettes/[id] — Supprime une étiquette (admin).
+ * Les affectations souvenir_etiquette sont supprimées automatiquement (CASCADE).
+ */
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const err = await requireAdmin();
+  if (err) return err;
+
+  const { id: idParam } = await params;
+  const etiquetteId = parseInt(idParam, 10);
+  if (Number.isNaN(etiquetteId) || etiquetteId < 1) {
+    return NextResponse.json({ error: 'id invalide' }, { status: 400 });
+  }
+
+  const repo = defaultEtiquetteRepository;
+  await repo.ensureTables();
+
+  try {
+    await repo.delete(etiquetteId);
+    return NextResponse.json({ ok: true });
+  } catch (e) {
+    console.error('[etiquettes] DELETE error:', e);
+    return NextResponse.json(
+      { error: "Erreur lors de la suppression de l'étiquette" },
+      { status: 500 }
+    );
+  }
+}
+
+/**
  * PATCH /api/etiquettes/[id] — Renomme une étiquette (admin).
  * Body: { libelle: string }
  */

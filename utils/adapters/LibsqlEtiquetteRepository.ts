@@ -59,6 +59,13 @@ export class LibsqlEtiquetteRepository implements EtiquetteRepository {
     }
   }
 
+  async delete(id: number): Promise<void> {
+    await this.db.execute({
+      sql: 'DELETE FROM etiquette WHERE id = ?',
+      args: [id],
+    });
+  }
+
   async listAll(): Promise<{ id: number; libelle: string }[]> {
     const result = await this.db.execute({
       sql: 'SELECT id, libelle FROM etiquette ORDER BY libelle',

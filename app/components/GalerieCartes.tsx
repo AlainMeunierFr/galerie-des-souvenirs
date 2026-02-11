@@ -209,11 +209,16 @@ export default function GalerieCartes({
         const start = Math.min(anchorIndex, index);
         const end = Math.max(anchorIndex, index);
         setSelectedNoms((prev) => {
+          if (selected) {
+            const next = new Set<string>();
+            for (let i = start; i <= end; i++) {
+              next.add(allNoms[i]);
+            }
+            return next;
+          }
           const next = new Set(prev);
           for (let i = start; i <= end; i++) {
-            const n = allNoms[i];
-            if (selected) next.add(n);
-            else next.delete(n);
+            next.delete(allNoms[i]);
           }
           return next;
         });
@@ -308,6 +313,25 @@ export default function GalerieCartes({
       setModalRenameEtiquetteError('Erreur lors du renommage');
     }
   }, [modalRenameEtiquetteId, modalRenameEtiquetteLibelle, etiquettes, closeModalRenameEtiquette, fetchEtiquettes]);
+
+  const submitDeleteEtiquette = useCallback(async () => {
+    const id = modalRenameEtiquetteId;
+    if (id == null) return;
+    setModalRenameEtiquetteError(null);
+    try {
+      const res = await fetch(`/api/etiquettes/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        closeModalRenameEtiquette();
+        fetchEtiquettes();
+      } else {
+        const data = (await res.json()) as { error?: string };
+        setModalRenameEtiquetteError(data.error ?? 'Erreur lors de la suppression');
+      }
+    } catch (e) {
+      console.error('[etiquettes] DELETE error:', e);
+      setModalRenameEtiquetteError('Erreur lors de la suppression');
+    }
+  }, [modalRenameEtiquetteId, closeModalRenameEtiquette, fetchEtiquettes]);
 
   const handlePanachageSupprimerTout = useCallback(async () => {
     const id = panachageEtiquetteId;
@@ -417,18 +441,25 @@ export default function GalerieCartes({
 
   const zoneEtiquettesContent =
     isAdmin && selectedNoms.size > 0 ? (
-      <div data-testid="zone-etiquettes">
-        <button type="button" onClick={openModalEtiquette}>
-          Ajouter étiquette
-        </button>
-        <button
-          type="button"
-          onClick={() => setSelectedNoms(new Set())}
-          data-testid="bouton-tout-deselectionner"
-        >
-          Tout déselectionner
-        </button>
-        <div aria-label="Liste des étiquettes">
+      <div className="filtre-pills zone-etiquettes" data-testid="zone-etiquettes">
+        <span className="filtre-pills-legend">Affecter étiquettes</span>
+        <div className="filtre-pills-options" role="group" aria-label="Zone admin étiquettes">
+          <button
+            type="button"
+            className="filtre-pills-option"
+            onClick={openModalEtiquette}
+          >
+            Ajouter étiquette
+          </button>
+          <button
+            type="button"
+            className="filtre-pills-option"
+            onClick={() => setSelectedNoms(new Set())}
+            data-testid="bouton-tout-deselectionner"
+          >
+            Tout déselectionner
+          </button>
+          <div aria-label="Liste des étiquettes" className="zone-etiquettes-liste">
           {etiquettes.length === 0 ? (
             <span>Aucune étiquette</span>
           ) : (
@@ -458,6 +489,7 @@ export default function GalerieCartes({
               ))}
             </ul>
           )}
+          </div>
         </div>
       </div>
     ) : null;
@@ -593,6 +625,14 @@ export default function GalerieCartes({
               className="disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Modifier
+            </button>
+            <button
+              type="button"
+              onClick={submitDeleteEtiquette}
+              data-testid="modal-rename-etiquette-supprimer"
+              className="text-destructive"
+            >
+              Supprimer
             </button>
           </div>
         </form>

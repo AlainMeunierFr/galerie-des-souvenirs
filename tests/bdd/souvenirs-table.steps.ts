@@ -14,12 +14,16 @@ const { Given, When, Then } = createBdd(test);
 const SKIP_CA2 =
   "CA2 nécessite un fichier HEIC réel dans data/input pour test d'intégration.";
 
-function runScript(script: string): Promise<{ stdout: string; stderr: string }> {
+function runScript(
+  script: string,
+  env?: Record<string, string>
+): Promise<{ stdout: string; stderr: string }> {
   return new Promise((resolve, reject) => {
     const child = spawn('npm', ['run', script], {
       cwd: process.cwd(),
       shell: true,
       stdio: ['ignore', 'pipe', 'pipe'],
+      env: { ...process.env, ...env },
     });
     let stdout = '';
     let stderr = '';
@@ -121,7 +125,7 @@ Given(
 
 When('je lance le script db:souvenirs-sync', async () => {
   test.setTimeout(60_000); // script Blob + DB peut dépasser 30s
-  await runScript('db:souvenirs-sync');
+  await runScript('db:souvenirs-sync', { SYNC_FROM_LOCAL: '1' });
 });
 
 Then('la table souvenir contient un enregistrement pour chaque fichier trouvé', async () => {

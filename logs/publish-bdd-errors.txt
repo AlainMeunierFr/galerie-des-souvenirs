@@ -5,91 +5,12 @@
 > galerie-des-souvenirs@0.1.0 test:bdd
 > npx bddgen && npx playwright test
 
-[dotenv@17.2.4] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.4] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
 [dotenv@17.2.4] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
 
-Running 42 tests using 6 workers
-
-[1A[2K[dotenv@17.2.4] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
-
-[1A[2K[dotenv@17.2.4] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
-
-[1A[2K[dotenv@17.2.4] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
-
-[1A[2K[dotenv@17.2.4] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
-
-[1A[2K[1/42] [chromium] › .features-gen\tests\bdd\admin-privileges.feature.spec.js:10:7 › Privilèges administrateur (US-5.3) › CA1 - L'utilisateur connecté avec alain@maep.fr est reconnu comme administrateur
-[1A[2K[2/42] [chromium] › .features-gen\tests\bdd\accueil.feature.spec.js:10:7 › Page d'accueil › La page affiche le message de bienvenue
-[1A[2K[3/42] [chromium] › .features-gen\tests\bdd\admin-privileges.feature.spec.js:26:7 › Privilèges administrateur (US-5.3) › CA2 - L'utilisateur non administrateur voit les trois boutons d'intérêt et pas le bouton Supprimer
-[1A[2K[4/42] [chromium] › .features-gen\tests\bdd\admin-privileges.feature.spec.js:20:7 › Privilèges administrateur (US-5.3) › CA2 - L'administrateur voit le bouton Supprimer et pas les trois boutons d'intérêt sur les cartes
-[1A[2K[dotenv@17.2.4] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
-
-[1A[2K[5/42] [chromium] › .features-gen\tests\bdd\admin-privileges.feature.spec.js:15:7 › Privilèges administrateur (US-5.3) › CA1 - L'utilisateur connecté avec un autre email n'est pas administrateur
-[1A[2K[dotenv@17.2.4] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
-
-[1A[2K[6/42] [chromium] › .features-gen\tests\bdd\admin-privileges.feature.spec.js:32:7 › Privilèges administrateur (US-5.3) › CA3 - Clic sur Supprimer ouvre une pop-up de confirmation
-[1A[2K[7/42] [chromium] › .features-gen\tests\bdd\admin-privileges.feature.spec.js:39:7 › Privilèges administrateur (US-5.3) › CA3 - Confirmation dans la pop-up supprime le souvenir (base et dossiers)
-[1A[2K[8/42] [chromium] › .features-gen\tests\bdd\admin-privileges.feature.spec.js:50:7 › Privilèges administrateur (US-5.3) › CA3 - Annulation ou fermeture de la pop-up n'effectue aucune suppression
-[1A[2K[9/42] [chromium] › .features-gen\tests\bdd\etiquettes-admin.feature.spec.js:10:7 › Étiquettes sur les souvenirs (US-5.4) › CA1 - L'administrateur voit une case à cocher sur chaque carte souvenir
-[1A[2K[10/42] [chromium] › .features-gen\tests\bdd\etiquettes-admin.feature.spec.js:17:7 › Étiquettes sur les souvenirs (US-5.4) › CA1 - L'utilisateur non administrateur ne voit pas de case à cocher sur les cartes
-[1A[2K[11/42] [chromium] › .features-gen\tests\bdd\etiquettes-admin.feature.spec.js:23:7 › Étiquettes sur les souvenirs (US-5.4) › CA2 - Sans sélection la zone étiquettes ne propose pas le bouton Ajouter étiquette
-[1A[2K[12/42] [chromium] › .features-gen\tests\bdd\etiquettes-admin.feature.spec.js:29:7 › Étiquettes sur les souvenirs (US-5.4) › CA2 - Avec au moins un souvenir coché le bouton Ajouter étiquette et la liste des étiquettes sont visibles
-[1A[2K[13/42] [chromium] › .features-gen\tests\bdd\etiquettes-admin.feature.spec.js:37:7 › Étiquettes sur les souvenirs (US-5.4) › CA3 - Clic sur Ajouter étiquette ouvre une pop-up avec champ libellé et boutons Annuler et Créer
-[1A[2K[14/42] [chromium] › .features-gen\tests\bdd\etiquettes-admin.feature.spec.js:48:7 › Étiquettes sur les souvenirs (US-5.4) › CA3 - Création d'une nouvelle étiquette avec libellé non vide l'affecte aux souvenirs cochés
-[1A[2K[15/42] [chromium] › .features-gen\tests\bdd\etiquettes-admin.feature.spec.js:60:7 › Étiquettes sur les souvenirs (US-5.4) › CA3 - Création avec un libellé déjà existant affiche un message et ne crée pas de doublon
-[1A[2K[16/42] [chromium] › .features-gen\tests\bdd\etiquettes-admin.feature.spec.js:72:7 › Étiquettes sur les souvenirs (US-5.4) › CA4 - Clic sur une étiquette qu'aucun souvenir coché n'a l'affecte à tous les cochés
-[1A[2K[17/42] [chromium] › .features-gen\tests\bdd\etiquettes-admin.feature.spec.js:81:7 › Étiquettes sur les souvenirs (US-5.4) › CA4 - Clic sur une étiquette que tous les souvenirs cochés ont la désaffecte pour tous
-[1A[2K[18/42] [chromium] › .features-gen\tests\bdd\etiquettes-admin.feature.spec.js:90:7 › Étiquettes sur les souvenirs (US-5.4) › CA4 - Panachage : une question propose Supprimer sur tout, Affecter à tout ou Annuler
-[1A[2K[19/42] [chromium] › .features-gen\tests\bdd\filtre-interet-header.feature.spec.js:11:7 › Filtre par intérêt et header fixe (US-5.2) › CA1 - Le filtre Intérêt est une liste déroulante à multi-sélection avec les mêmes libellés que les boutons
-[1A[2K[20/42] [chromium] › .features-gen\tests\bdd\filtre-interet-header.feature.spec.js:17:7 › Filtre par intérêt et header fixe (US-5.2) › CA3 - Par défaut toutes les options du filtre Intérêt sont cochées
-[1A[2K[21/42] [chromium] › .features-gen\tests\bdd\filtre-interet-header.feature.spec.js:22:7 › Filtre par intérêt et header fixe (US-5.2) › CA2 - Les options cochées du filtre sont combinées par OU
-[1A[2K[22/42] [chromium] › .features-gen\tests\bdd\filtre-interet-header.feature.spec.js:28:7 › Filtre par intérêt et header fixe (US-5.2) › CA4 - Le header (titre et filtres) reste visible au défilement
-[1A[2K[23/42] [chromium] › .features-gen\tests\bdd\galerie.feature.spec.js:10:7 › Afficher la galerie (US-2.1) › CA1 - Page non connectée affiche le titre centré et l'invitation
-[1A[2K[24/42] [chromium] › .features-gen\tests\bdd\galerie.feature.spec.js:17:7 › Afficher la galerie (US-2.1) › CA2 - Page connectée affiche le H1 en haut à gauche
-[1A[2K[25/42] [chromium] › .features-gen\tests\bdd\galerie.feature.spec.js:23:7 › Afficher la galerie (US-2.1) › CA3 - Page connectée affiche la galerie sur 4 colonnes
-[1A[2K[26/42] [chromium] › .features-gen\tests\bdd\message-bienvenue.feature.spec.js:10:7 › Message de bienvenue (US-1.1) › CA1 - Le titre H1 affiche le message de bienvenue
-[1A[2K[27/42] [chromium] › .features-gen\tests\bdd\message-bienvenue.feature.spec.js:14:7 › Message de bienvenue (US-1.1) › CA2 - Le titre est centré horizontalement et verticalement
-[1A[2K[28/42] [chromium] › .features-gen\tests\bdd\message-bienvenue.feature.spec.js:19:7 › Message de bienvenue (US-1.1) › CA2 - Le centrage est conservé sur mobile
-[1A[2K[29/42] [chromium] › .features-gen\tests\bdd\message-bienvenue.feature.spec.js:25:7 › Message de bienvenue (US-1.1) › CA2 - Le centrage est conservé sur desktop
-[1A[2K[30/42] [chromium] › .features-gen\tests\bdd\message-connexion.feature.spec.js:10:7 › Message adapté à l'état de connexion (US-1.2) › CA1 - Visiteur non connecté voit l'invitation à se connecter
-[1A[2K[31/42] [chromium] › .features-gen\tests\bdd\message-connexion.feature.spec.js:15:7 › Message adapté à l'état de connexion (US-1.2) › CA2 - Visiteur connecté voit le message des photos
-[1A[2K[32/42] [chromium] › .features-gen\tests\bdd\selection-shift.feature.spec.js:10:7 › Sélection rapide par Shift (US-5.5) › CA1 - Shift + clic sélectionne toutes les cartes entre la première et la cible
-[1A[2K[33/42] [chromium] › .features-gen\tests\bdd\selection-shift.feature.spec.js:18:7 › Sélection rapide par Shift (US-5.5) › CA2 - Shift + clic sur une carte décochée déselectionne la plage
-[1A[2K[34/42] [chromium] › .features-gen\tests\bdd\selection-shift.feature.spec.js:28:7 › Sélection rapide par Shift (US-5.5) › CA2 - Shift + clic sur une carte cochée sélectionne la plage
-[1A[2K[35/42] [chromium] › .features-gen\tests\bdd\selection-shift.feature.spec.js:36:7 › Sélection rapide par Shift (US-5.5) › CA3 - Le dernier clic sans Shift définit l'ancrage pour le Shift + clic suivant
-[1A[2K[36/42] [chromium] › .features-gen\tests\bdd\selection-shift.feature.spec.js:46:7 › Sélection rapide par Shift (US-5.5) › CA4 - Le comportement Shift ne s'applique qu'en mode administrateur
-[1A[2K[37/42] [chromium] › .features-gen\tests\bdd\souvenirs-table.feature.spec.js:10:7 › Table souvenir et référencement par le script HEIC (US-4.1) › CA1 - La table souvenir existe avec les colonnes attendues
-[1A[2K[38/42] [chromium] › .features-gen\tests\bdd\souvenirs-table.feature.spec.js:15:7 › Table souvenir et référencement par le script HEIC (US-4.1) › CA2 - Conversion HEIC réussie crée un enregistrement en base
-[1A[2K[39/42] [chromium] › .features-gen\tests\bdd\souvenirs-table.feature.spec.js:21:7 › Table souvenir et référencement par le script HEIC (US-4.1) › CA4 - Le script db:souvenirs-sync resynchronise la table avec les dossiers
-[1A[2K[40/42] [chromium] › .features-gen\tests\bdd\sync-utilisateurs.feature.spec.js:10:7 › Synchroniser les utilisateurs Clerk vers une table locale (US-3.1) › CA1 - La table user existe avec les colonnes attendues
-[1A[2K[41/42] [chromium] › .features-gen\tests\bdd\sync-utilisateurs.feature.spec.js:16:7 › Synchroniser les utilisateurs Clerk vers une table locale (US-3.1) › CA2 - Inscription via Clerk crée un enregistrement en base locale
-[1A[2K[42/42] [chromium] › .features-gen\tests\bdd\sync-utilisateurs.feature.spec.js:22:7 › Synchroniser les utilisateurs Clerk vers une table locale (US-3.1) › CA3 - Mise à jour du profil Clerk met à jour la base locale
-
-[1A[2K  1) [chromium] › .features-gen\tests\bdd\souvenirs-table.feature.spec.js:21:7 › Table souvenir et référencement par le script HEIC (US-4.1) › CA4 - Le script db:souvenirs-sync resynchronise la table avec les dossiers 
-
-    [31mTest timeout of 30000ms exceeded.[39m
-
-    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
-    test-results\tests-bdd-souvenirs-table.-5cd06--la-table-avec-les-dossiers-chromium\trace.zip
-    Usage:
-
-        npx playwright show-trace test-results\tests-bdd-souvenirs-table.-5cd06--la-table-avec-les-dossiers-chromium\trace.zip
-
-    ────────────────────────────────────────────────────────────────────────────────────────────────
+Error: http://localhost:3000 is already used, make sure that nothing is running on the port/url or set reuseExistingServer:true in config.webServer.
 
 
-[1A[2K  1 failed
-    [chromium] › .features-gen\tests\bdd\souvenirs-table.feature.spec.js:21:7 › Table souvenir et référencement par le script HEIC (US-4.1) › CA4 - Le script db:souvenirs-sync resynchronise la table avec les dossiers 
-  32 skipped
-  9 passed (1.0m)
-
-To open last HTML report run:
-[36m[39m
-[36m  npx playwright show-report[39m
-[36m[39m
 
 === stderr ===
-[1A[2K[chromium] › .features-gen\tests\bdd\souvenirs-table.feature.spec.js:21:7 › Table souvenir et référencement par le script HEIC (US-4.1) › CA4 - Le script db:souvenirs-sync resynchronise la table avec les dossiers
-(node:30212) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
-(Use `node --trace-deprecation ...` to show where the warning was created)
 

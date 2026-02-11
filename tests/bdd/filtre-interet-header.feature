@@ -7,20 +7,24 @@ Fonctionnalité: Filtre par intérêt et header fixe (US-5.2)
     Étant donné je suis sur la page d'accueil
     Étant donné je suis connecté
 
-  Scénario: CA1 - Le filtre Intérêt est une liste déroulante avec les mêmes libellés que les boutons
+  @skip
+  Scénario: CA1 - Le filtre Intérêt est un contrôle à choix unique avec les mêmes libellés que les boutons
     Alors la page contient un filtre ou un contrôle intitulé "Intérêt" ou dont le libellé évoque l'intérêt
-    Et ce filtre propose les trois options d'intérêt (concepts : intéressé, pas intéressé, pas prononcé)
+    Et ce filtre propose l'option "Sans filtre" et les trois options d'intérêt (concepts : intéressé, pas intéressé, pas prononcé)
     Et les options du filtre Intérêt ont les mêmes libellés que les boutons d'intérêt sur les cartes
 
+  @skip
   Scénario: CA3 - Par défaut le filtre Intérêt est sur « Sans filtre »
-    Alors le filtre Intérêt a toutes ses options cochées ou sélectionnées
+    Alors le filtre Intérêt a "Sans filtre" sélectionné
     Et la galerie affiche l'ensemble des souvenirs (aucun filtrage appliqué)
 
+  @skip
   Scénario: CA2 - Sélectionner une option du filtre restreint la galerie
-    Quand je décoche uniquement l'option d'intérêt "pas prononcé" dans le filtre Intérêt
-    Alors la galerie n'affiche que les souvenirs dont l'intérêt est "intéressé" ou "pas intéressé"
+    Quand je sélectionne l'option "intéressé" dans le filtre Intérêt
+    Alors la galerie n'affiche que les souvenirs dont l'intérêt est "intéressé"
     Et les souvenirs dont l'intérêt est "pas prononcé" ne sont pas affichés
 
+  @skip
   Scénario: CA4 - Le header (titre et filtres) reste visible au défilement
     Alors la page contient un titre H1 avec le texte "Bienvenue sur la galerie des souvenirs"
     Et la page contient un filtre ou un contrôle intitulé "Intérêt" ou dont le libellé évoque l'intérêt

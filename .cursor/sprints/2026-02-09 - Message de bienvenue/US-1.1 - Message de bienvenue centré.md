@@ -10,7 +10,7 @@
 
 - **Critères d'acceptation** :
 - **CA1 - Titre** :
-  - Le message affiché est « Bienvenue sur la galerie des souvenirs ».
+  - Le message affiché est « Bienvenue sur la galerie des souvenirs » (visiteur non connecté) ou « [prénom], bienvenue sur la galerie des souvenirs » (visiteur connecté, si prénom disponible).
   - Le texte est rendu en tant que titre H1 (balise sémantique h1).
 - **CA2 - Centrage** :
   - Le titre est centré horizontalement dans la zone de contenu visible.

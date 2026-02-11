@@ -83,7 +83,8 @@ function collectTU(testsDir) {
         files++;
         const content = readFileSync(p, 'utf-8');
         const itMatches = content.match(/\bit\s*\(/g);
-        const testMatches = content.match(/\btest\s*\(/g);
+        // Exclure .test() (ex: expect().test(), regex.test()) — seulement test( au début ou après espace
+        const testMatches = content.match(/(?<!\.)\btest\s*\(/g);
         tests += (itMatches?.length || 0) + (testMatches?.length || 0);
       }
     }
