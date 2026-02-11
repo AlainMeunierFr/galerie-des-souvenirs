@@ -186,6 +186,7 @@ export default function GalerieCartes({
       });
       if (res.ok) {
         closeModalEtiquette();
+        setSelectedNoms(new Set());
         fetchEtiquettes();
       } else if (res.status === 409) {
         const data = (await res.json()) as { error?: string };
@@ -250,19 +251,25 @@ export default function GalerieCartes({
         const avec = data.souvenir_noms ?? [];
         const countAvec = avec.length;
         if (countAvec === 0) {
-          await fetch(`/api/etiquettes/${etiquetteId}/assign`, {
+          const assignRes = await fetch(`/api/etiquettes/${etiquetteId}/assign`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ souvenir_noms: noms }),
           });
-          fetchEtiquettes();
+          if (assignRes.ok) {
+            setSelectedNoms(new Set());
+            fetchEtiquettes();
+          }
         } else if (countAvec === noms.length) {
-          await fetch(`/api/etiquettes/${etiquetteId}/unassign`, {
+          const unassignRes = await fetch(`/api/etiquettes/${etiquetteId}/unassign`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ souvenir_noms: noms }),
           });
-          fetchEtiquettes();
+          if (unassignRes.ok) {
+            setSelectedNoms(new Set());
+            fetchEtiquettes();
+          }
         } else {
           setPanachageEtiquetteId(etiquetteId);
         }
@@ -338,12 +345,15 @@ export default function GalerieCartes({
     if (id == null) return;
     setPanachageEtiquetteId(null);
     const noms = [...selectedNoms];
-    await fetch(`/api/etiquettes/${id}/unassign`, {
+    const res = await fetch(`/api/etiquettes/${id}/unassign`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ souvenir_noms: noms }),
     });
-    fetchEtiquettes();
+    if (res.ok) {
+      setSelectedNoms(new Set());
+      fetchEtiquettes();
+    }
   }, [panachageEtiquetteId, selectedNoms, fetchEtiquettes]);
 
   const handlePanachageAffecterTout = useCallback(async () => {
@@ -351,12 +361,15 @@ export default function GalerieCartes({
     if (id == null) return;
     setPanachageEtiquetteId(null);
     const noms = [...selectedNoms];
-    await fetch(`/api/etiquettes/${id}/assign`, {
+    const res = await fetch(`/api/etiquettes/${id}/assign`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ souvenir_noms: noms }),
     });
-    fetchEtiquettes();
+    if (res.ok) {
+      setSelectedNoms(new Set());
+      fetchEtiquettes();
+    }
   }, [panachageEtiquetteId, selectedNoms, fetchEtiquettes]);
 
   const handleInteretChange = useCallback(

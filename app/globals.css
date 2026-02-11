@@ -215,26 +215,25 @@ body {
 }
 
 .page-header-filtres {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: space-between;
-  gap: 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
   width: 100%;
 }
 
-.page-header-filtres-gauche {
+.page-header-filtre-item {
+  min-width: 0;
   display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  gap: 1.25rem;
+  flex-direction: column;
 }
 
 .zone-etiquettes-anchor {
-  flex: 1;
   display: flex;
-  justify-content: center;
-  padding: 0 1rem;
+  min-width: 0;
+}
+
+.zone-etiquettes-anchor > * {
+  width: 100%;
   min-width: 0;
 }
 
@@ -254,6 +253,7 @@ body {
   flex-direction: column;
   gap: 0.5rem;
   min-width: 0;
+  flex-wrap: wrap;
 }
 
 .filtre-pills-legend {
@@ -354,10 +354,12 @@ body {
 
 /* Zoom — bloc à droite, même style de bloc que les filtres */
 .galerie-zoom {
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem;
-  flex-shrink: 0;
+  min-width: 0;
+  width: 100%;
 }
 
 .galerie-zoom-label {

@@ -54,8 +54,10 @@ export default function AccueilConnecte({ souvenirs }: AccueilConnecteProps) {
         data-testid="page-header"
       >
         <div className="page-header-filtres" data-testid="zone-filtres">
-          <div className="page-header-filtres-gauche">
+          <div className="page-header-filtre-item">
             <FiltreInteret selectedKeys={selectedKeys} onChange={setSelectedKeys} />
+          </div>
+          <div className="page-header-filtre-item">
             <FiltreEtiquette
               etiquettes={
                 isAdmin
@@ -66,8 +68,9 @@ export default function AccueilConnecte({ souvenirs }: AccueilConnecteProps) {
               onChange={setSelectedEtiquetteLibelles}
             />
           </div>
-          <div id="zone-etiquettes-anchor" className="zone-etiquettes-anchor" />
-          <div className="galerie-zoom" role="group" aria-label="Taille des cartes">
+          <div id="zone-etiquettes-anchor" className="page-header-filtre-item zone-etiquettes-anchor" />
+          <div className="page-header-filtre-item">
+            <div className="galerie-zoom" role="group" aria-label="Taille des cartes">
             <span className="galerie-zoom-label" id="zoom-label">
               Petit
             </span>
@@ -92,6 +95,7 @@ export default function AccueilConnecte({ souvenirs }: AccueilConnecteProps) {
             <span className="galerie-zoom-label" aria-live="polite">
               Grand
             </span>
+          </div>
           </div>
         </div>
       </header>
